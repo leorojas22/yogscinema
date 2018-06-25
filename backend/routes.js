@@ -15,11 +15,11 @@ module.exports = (app) => {
 			})
 			.catch(err => {
 				console.log(err);
-				res.json(err);
+				res.redirect(config.siteURL+"?error=1");
 			});
 		}
 		else {
-			res.json({ message: "Error" });
+			res.redirect(config.siteURL+"?error=1");
 		}
 	});
 

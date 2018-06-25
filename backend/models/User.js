@@ -156,8 +156,9 @@ class User extends BaseModel {
 		}
 	}
 
-	revokeAccess() {
+	revokeAccess(res) {
 		return Twitch.revokeAccess(this.accessToken).then(() => {
+			res.clearCookie("jwt");
 			return User.query().update({ token: "" }).where({ id: this.id });	
 		});
 	}
