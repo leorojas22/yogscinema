@@ -117,6 +117,7 @@ button:hover, .twitch-connect-btn:hover, .btn:hover {
 	cursor: pointer;
 	background-color: #0084d8;
 	transition: background-color .2s;
+	color: white;
 }
 
 .twitch-connect-btn {
