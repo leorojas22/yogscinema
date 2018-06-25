@@ -153,7 +153,15 @@ class Twitch {
 					return reject({ message: "Unable to revoke access.  You will have to do it manually through your Twitch dashboard." });
 				}
 
-				let result = JSON.parse(body);
+				console.log(body);
+				try {
+					let result = JSON.parse(body);
+				}
+				catch (e) {
+					console.log(e);
+					let result = { error: "Unable to parse result." };
+				}
+				
 				if(typeof result.error === 'undefined') {
 					return resolve(result);
 				}
