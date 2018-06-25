@@ -85,7 +85,6 @@ h3 small {
 	position: relative;
 	text-align: center;
 	font-size: 18px;
-	padding-bottom: 20px;
 }
 
 .connected-user strong {
@@ -101,8 +100,9 @@ a:hover {
 	color: #0084d8;
 }
 
-button, .twitch-connect-btn {
+button, .twitch-connect-btn, .btn {
 	font-family: 'Roboto', arial, sans-serif;
+	display: inline-block;
 	background-color: #009cff;
 	border: 0px;
 	color: white;
@@ -113,7 +113,7 @@ button, .twitch-connect-btn {
 	transition: background-color .2s;
 }
 
-button:hover, .twitch-connect-btn:hover {
+button:hover, .twitch-connect-btn:hover, .btn {
 	cursor: pointer;
 	background-color: #0084d8;
 	transition: background-color .2s;
@@ -122,7 +122,15 @@ button:hover, .twitch-connect-btn:hover {
 .twitch-connect-btn {
 	background-color: #6043a1;
 	font-size: 24px;
-	display: inline-block;
+}
+
+.btn {
+	font-size: 18px;
+}
+
+.btn.logout {
+	padding: 10px 18px;
+	margin-top: 16px;
 }
 
 .twitch-connect-btn:hover {
@@ -266,6 +274,12 @@ button.vote-3:hover {
 .live-indicator span {
 	display: inline-block;
 	vertical-align: top;
+}
+
+hr {
+	border: 0px;
+	border-top: solid #373d52 1px;
+	margin: 20px 0px;
 }
 
 @media (max-width: 940px) {
