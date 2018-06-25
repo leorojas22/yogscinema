@@ -143,10 +143,7 @@ class Twitch {
 		return new Promise((resolve, reject) => {
 			request({
 				url		: TWITCH_OAUTH_URL + "revoke" + queryString,
-				method	: "POST",
-				headers: {
-					'Client-ID': config.twitch.clientID
-				}
+				method	: "POST"
 			}, (err, data, body) => {
 				if(err) {
 					console.log(err);
