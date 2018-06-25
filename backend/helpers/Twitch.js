@@ -154,12 +154,13 @@ class Twitch {
 				}
 
 				console.log(body);
+				let result = false;
 				try {
-					let result = JSON.parse(body);
+					result = JSON.parse(body);
 				}
 				catch (e) {
 					console.log(e);
-					let result = { error: "Unable to parse result." };
+					result = { error: "Unable to parse result." };
 				}
 				
 				if(typeof result.error === 'undefined') {
