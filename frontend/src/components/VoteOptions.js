@@ -38,18 +38,10 @@ class VoteOptions extends React.Component {
 			method: "GET"
 		}).then(response => {
 			if(typeof response.result !== 'undefined' && response.result) {
-				console.log("NEW CUSTOM VOTES");
 				this.setState({
 					customVotes: response.data
 				});
-				console.log(response.data);
-				console.log(this.state.customVotes);
 			}
-			else {
-				console.log("NOPE CUSTOM VOTES");
-				console.log(response);
-			}
-
 		})
 		.catch(err => {
 			this.setState({

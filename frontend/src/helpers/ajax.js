@@ -6,7 +6,7 @@ export const ajaxHelper = (url, options) => {
 		options.credentials = 'include';
 	}
 
-	if(typeof options.method !== 'undefined' && (options.method == 'POST' || options.method == 'PATCH')) {
+	if(typeof options.method !== 'undefined' && (options.method === 'POST' || options.method === 'PATCH')) {
 		if(typeof options.headers !== 'undefined' && typeof options.headers['Content-Type'] === 'undefined') {
 			// Content-Type header not set, but headers are set
 			options.headers['Content-Type'] = 'application/json';
@@ -18,12 +18,12 @@ export const ajaxHelper = (url, options) => {
 			}
 		}
 
-		if(typeof options.body !== 'undefined' && typeof options.body !== 'String') {
+		if(typeof options.body !== 'undefined' && typeof options.body !== 'string') {
 			// body not a string
 			options.body = JSON.stringify(options.body);
 		}
 	}
-	else if (typeof options.method !== 'undefined' && options.method == 'GET' && typeof options.params !== 'undefined') {
+	else if (typeof options.method !== 'undefined' && options.method === 'GET' && typeof options.params !== 'undefined') {
 		let params = options.params;
 		delete options.params;
 
