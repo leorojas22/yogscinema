@@ -1,4 +1,4 @@
-const API_URL = "http://api.yogscinemavote.com";
+const API_URL = "https://api.yogscinemavote.com";
 
 export const ajaxHelper = (url, options) => {
 
