@@ -42,6 +42,40 @@ class App extends Component {
 				connected: false
 			})
 		});
+
+		if(window.location.search !== "") {
+			let popupMessage = false;
+			setTimeout(() => {
+				switch(window.location.search) {
+					case '?error=1':
+						popupMessage = {
+							type: 'error', 
+							message: 'Unable to connect with Twitch.'
+						}
+						break;
+					case '?error=2':
+						popupMessage = {
+							type: 'error', 
+							message: 'Unable to revoke access.  Please login to Twitch under the Settings > Connections tab to fully revoke access.'
+						}
+						break;
+					case '?revoked=1':
+						popupMessage = {
+							type: 'success', 
+							message: "Successfully logged out."
+						}
+						break;	
+				}
+
+				if(popupMessage) {
+					this.togglePopupMessage(popupMessage.type, popupMessage.message);
+					window.history.pushState({}, "YogsCinema Vote", "https://yogscinemavote.com");
+				}
+
+			}, 100);
+			
+		}
+		
 	}
 
 	updateLiveStatus(status) {

@@ -21,7 +21,7 @@ router.get("/vote/:voteOption", (req, res) => {
 
 router.get("/revoke", (req, res) => {
 	return req.user.revokeAccess(res).then((result => {
-		res.redirect(config.siteURL);
+		res.redirect(config.siteURL+"?revoked=1");
 	}))
 	.catch(err => {
 		res.redirect(config.siteURL+"?error=2");
