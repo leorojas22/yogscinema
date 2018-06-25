@@ -153,7 +153,11 @@ class Twitch {
 					return reject({ message: "Unable to revoke access.  You will have to do it manually through your Twitch dashboard." });
 				}
 
+				console.log(TWITCH_OAUTH_URL + "revoke" + queryString);
+				console.log("START RESULT BODY");
 				console.log(body);
+				console.log("END RESULT BODY");
+				
 				let result = false;
 				try {
 					result = JSON.parse(body);
