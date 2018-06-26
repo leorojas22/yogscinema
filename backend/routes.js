@@ -26,7 +26,7 @@ module.exports = (app) => {
 	app.get("/is-live", (req,res) => {
 		let output = { result: false };
 		if(config.yogsChannel) {
-			output.result 		= config.yogsChannel.title === "YogsCinema!";
+			output.result 		= config.yogsChannel.title.indexOf("YogsCinema") !== -1;
 			output.last_checked = config.yogsChannel.last_checked;
 		}
 
