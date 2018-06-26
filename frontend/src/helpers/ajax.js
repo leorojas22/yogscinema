@@ -1,4 +1,6 @@
-const API_URL = "https://api.yogscinemavote.com";
+import config from '../config';
+
+const API_URL = config.apiURL;
 
 export const ajaxHelper = (url, options) => {
 

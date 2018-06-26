@@ -110,6 +110,7 @@ button, .twitch-connect-btn, .btn {
 	font-size: 32px;
 	padding: 6px 18px;
 	margin: 0px 10px;
+	box-shadow: 0px 0px 5px 3px rgba(0,0,0,.1);
 	transition: background-color .2s;
 }
 
@@ -118,6 +119,14 @@ button:hover, .twitch-connect-btn:hover, .btn:hover {
 	background-color: #0084d8;
 	transition: background-color .2s;
 	color: white;
+}
+
+.btn-sm {
+	font-size: 16px;
+}
+
+.btn-dark {
+	background-color: #191b23;
 }
 
 .twitch-connect-btn {
@@ -283,9 +292,19 @@ hr {
 	margin: 20px 0px;
 }
 
+.show-chat-btn, .twitch-chat {
+	display: none;
+}
+
+
+
 @media (max-width: 940px) {
 	.App {
 		width: 100%;
+	}
+
+	.show-chat-btn {
+		display: inline-block;
 	}
 
 	.vote-options {
@@ -321,5 +340,24 @@ hr {
 
 	.disclaimer {
 		width: 100%;
+	}
+
+	.twitch-chat {
+		position: relative;
+		display: block;
+		width: 100%;
+		text-align: center;
+	}
+
+	.twitch-chat iframe {
+		width: 100%;
+		height: 500px;
+		margin-bottom: 20px;
+	}
+	
+	.twitch-chat button {
+		display: inline-block;
+		width: auto;
+		padding: 10px 18px;
 	}
 }

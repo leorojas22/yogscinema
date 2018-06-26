@@ -10,6 +10,9 @@ import PopupMessage from './components/PopupMessage';
 import TwitchConnectButton from './components/TwitchConnectButton';
 import PageTitle from './components/PageTitle';
 import ConnectedUser from './components/ConnectedUser';
+import TwitchChat from './components/TwitchChat';
+
+import config from './config.js';
 
 class App extends Component {
 
@@ -69,7 +72,7 @@ class App extends Component {
 
 				if(popupMessage) {
 					this.togglePopupMessage(popupMessage.type, popupMessage.message);
-					window.history.pushState({}, "YogsCinema Vote", "https://yogscinemavote.com");
+					window.history.pushState({}, "YogsCinema Vote", config.siteURL);
 				}
 
 			}, 100);
@@ -145,7 +148,9 @@ class App extends Component {
 					:
 					(<TwitchConnectButton />)
 				}
-				
+
+				<TwitchChat />
+
 				<Disclaimer />
 				
 				<PopupMessage popupMessage={this.state.popupMessage} />
