@@ -32,11 +32,11 @@ class TwitchChat extends React.Component {
 								id="yogscast"
 								src="https://www.twitch.tv/embed/yogscast/chat?darkpopout">
 						</iframe>
-						<button type="button" className="btn-sm btn-dark" onClick={this.toggleTwitchChat}>Hide Chat</button>
+						<button type="button" className="btn-sm btn-purple" onClick={this.toggleTwitchChat}>Hide Chat</button>
 					</Fragment>
 				) 
 				: 
-				(<button type="button" className="show-chat-btn btn-sm btn-dark" onClick={this.toggleTwitchChat}>Show Chat</button>)
+				(<button type="button" className="show-chat-btn btn-sm btn-purple" onClick={this.toggleTwitchChat}>Show Chat</button>)
 			}
 			</div>
 		)
