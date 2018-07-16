@@ -125,6 +125,12 @@ class CustomVote extends BaseModel {
 		}
 
 		let client = new tmi.client(opts);
+
+		client.on("disconnected", function(reason) {
+			console.log("DISCONNECTED YCVBOT - "+Date.now());
+			console.log("REASON: "+reason);
+		});
+
 		client.on("message", (channel, userstate, message, self) => {
 			if(self) {
 				return;
