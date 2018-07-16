@@ -172,7 +172,13 @@ class CustomVote extends BaseModel {
 			}
 
 		});
-		client.connect();
+		client.connect().then(result => {
+			console.log("connected")
+		})
+		.catch(err => {
+			console.log("ERROR");
+			console.log(err);
+		})
 	}
 
 }
