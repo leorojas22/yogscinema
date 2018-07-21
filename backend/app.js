@@ -31,18 +31,11 @@ require("./routes.js")(app);
 app.use("/user", require("./routes/user"));
 app.use("/votes", require("./routes/customvotes"));
 
-app.get("/recent", (req, res) => {
-	let CustomVote = require("./models/CustomVote");
-	CustomVote.findRecent().then(votes => {
-		res.json(votes);
-	})
-	.catch(err => {
-		res.json({ message: "None" });
-	})
-});
 
 const CustomVote = require("./models/CustomVote");
-CustomVote.monitorChatForVotes();
+if(!config.isDev) {
+	CustomVote.monitorChatForVotes();
+}
 
 // Monitor yogs twitch channel for yogscinema
 // Check every 5 minutes

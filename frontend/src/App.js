@@ -68,6 +68,8 @@ class App extends Component {
 							message: "Successfully logged out."
 						}
 						break;	
+					default:
+						break;
 				}
 
 				if(popupMessage) {

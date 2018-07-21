@@ -9,8 +9,8 @@ router.get("/", (req, res) => {
 	return res.json({ result: true, user: req.user });
 });
 
-router.get("/vote/:voteOption", (req, res) => {
-	return req.user.vote(req.params.voteOption).then(() => {
+router.post("/vote", (req, res) => {
+	return req.user.vote(req.body.voteOption).then(() => {
 		res.json({ result: true });
 	})
 	.catch(err => {

@@ -45,8 +45,12 @@ export const ajaxHelper = (url, options) => {
 	}
 
 	return fetch(API_URL+url, options)
-	.then((data) => {
-		return data.json();
+	.then((response) => {
+		if(response.headers.has("x-csrf-token")) {
+			localStorage.setItem("csrfToken", response.headers.get("x-csrf-token"));
+		}
+		
+		return response.json();
 	})
 	.then((data) => {
 		if(data.result) {

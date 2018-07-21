@@ -5,7 +5,7 @@ class TwitchChat extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			visible: localStorage.getItem("showTwitchChat") ? true : false
+			visible: localStorage.getItem("showTwitchChat") === "true" ? true : false
 		}
 
 		this.toggleTwitchChat = this.toggleTwitchChat.bind(this);
@@ -30,7 +30,8 @@ class TwitchChat extends React.Component {
 						<iframe frameborder="0"
 								scrolling="no"
 								id="yogscast"
-								src="https://www.twitch.tv/embed/yogscast/chat?darkpopout">
+								src="https://www.twitch.tv/embed/yogscast/chat?darkpopout"
+								title="twitchchat">
 						</iframe>
 						<button type="button" className="btn-sm btn-purple" onClick={this.toggleTwitchChat}>Hide Chat</button>
 					</Fragment>

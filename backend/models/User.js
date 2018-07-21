@@ -6,10 +6,10 @@ const jwt 					= require("jsonwebtoken");
 const config 				= require(process.cwd() + "/config");
 const moment				= require("moment");
 const CustomVote			= require(process.cwd() + "/models/CustomVote");
+const md5					= require("md5");
 
-
-const TWITCH_CHANNEL = "yogscast";
-const WAIT_BETWEEN_VOTES = 60;
+const TWITCH_CHANNEL 		= config.voting.channel;
+const WAIT_BETWEEN_VOTES 	= config.voting.waitTime;
 
 class User extends BaseModel {
 	static get tableName() {
@@ -108,10 +108,14 @@ class User extends BaseModel {
 		
 	}
 
-	getJWT() {
+	getJWT(csrfToken = false) {
 		var obj = {
 			user_id	: this.id,
-			exp		: Math.floor((Date.now() / 1000) + (60*60*14))
+			exp		: Math.floor((Date.now() / 1000) + (60*60*14)),
+		}
+
+		if(csrfToken) {
+			obj.csrf = csrfToken;
 		}
 
 		return jwt.sign(obj, config.jwtKey);
@@ -164,8 +168,17 @@ class User extends BaseModel {
 	}
 
 
-	setJWTCookie(res) {
-		res.cookie("jwt", this.getJWT(), { httpOnly: true, expires: new Date(Date.now() + (1000*60*60*24*30)) });
+	setJWTCookie(res, setCsrf = false) {
+		let csrfToken = false;
+		if(setCsrf) {
+			let randomNum 	= (Math.random()*1000)+1000;
+			let now 		= Date.now();
+			csrfToken 		= md5(""+randomNum+now);
+			res.set("x-csrf-token", csrfToken);
+		}
+
+
+		res.cookie("jwt", this.getJWT(csrfToken), { httpOnly: true, expires: new Date(Date.now() + (1000*60*60*24*30)) });
 	}
 
 	$formatJson(json) {

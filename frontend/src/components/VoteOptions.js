@@ -64,8 +64,12 @@ class VoteOptions extends React.Component {
 			isVoting: true
 		});
 
-		ajaxHelper("/user/vote/"+option, {
-			method: "GET"
+		ajaxHelper("/user/vote", {
+			method: "POST",
+			body: {
+				voteOption: option,
+				csrfToken: localStorage.getItem("csrfToken")
+			}
 		}).then(response => {
 			if(typeof response.result !== 'undefined' && response.result) {
 				// Show success message
@@ -96,7 +100,7 @@ class VoteOptions extends React.Component {
 		return this.props.isLive ? (
 			<Fragment>
 				{
-					this.state.lastVote ? (<p class="text-center">You last voted for: <strong>{this.state.lastVote}</strong></p>) : ""
+					this.state.lastVote ? (<p className="text-center">You last voted for: <strong>{this.state.lastVote}</strong></p>) : ""
 				}
 				<div className="vote-options">
 					<button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-1" onClick={this.vote.bind(this, 1)}>

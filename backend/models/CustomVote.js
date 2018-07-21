@@ -129,6 +129,12 @@ class CustomVote extends BaseModel {
 		client.on("disconnected", function(reason) {
 			console.log("DISCONNECTED YCVBOT - "+Date.now());
 			console.log("REASON: "+reason);
+
+			// When we are disconnected - wait 2 minutes and try to reconnect
+			setTimeout(() => {
+				client.connect();
+			}, 120000);
+
 		});
 
 		client.on("message", (channel, userstate, message, self) => {
