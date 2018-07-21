@@ -177,8 +177,12 @@ class User extends BaseModel {
 			res.set("x-csrf-token", csrfToken);
 		}
 
+		let cookieSettings = { httpOnly: true, expires: new Date(Date.now() + (1000*60*60*24*30)) };
+		if(!config.isDev) {
+			cookieSettings.secure = true;
+		}
 
-		res.cookie("jwt", this.getJWT(csrfToken), { httpOnly: true, expires: new Date(Date.now() + (1000*60*60*24*30)) });
+		res.cookie("jwt", this.getJWT(csrfToken), cookieSettings);
 	}
 
 	$formatJson(json) {
