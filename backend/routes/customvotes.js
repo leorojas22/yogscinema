@@ -6,15 +6,15 @@ const CustomVote = require(process.cwd() + "/models/CustomVote");
 router.use(verifyJWT);
 
 router.get("/", (req, res) => {
-	CustomVote.findRecent({}, true).then(recentVotes => {
-		res.json({
-			result: true,
-			data: recentVotes
-		})
-	})
-	.catch(err => {
-		res.json({ result: true, data: [] });
-	});
+    CustomVote.findRecent({}, true).then(recentVotes => {
+        res.json({
+            result: true,
+            data: recentVotes
+        })
+    })
+    .catch(err => {
+        res.json({ result: true, data: [] });
+    });
 });
 
 

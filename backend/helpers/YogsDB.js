@@ -5,132 +5,132 @@ const YOGSLIVE_CHANNEL_ID = 32;
 
 class YogsDB {
 
-	static get ID_SEARCH() {
-		return 1;
-	}
+    static get ID_SEARCH() {
+        return 1;
+    }
 
-	static get TEXT_SEARCH() {
-		return 2;
-	}
+    static get TEXT_SEARCH() {
+        return 2;
+    }
 
-	static validateSearchKeys(where) {
-		// There are more, but we will only be searching by these keys
-		let validKeys = [
-			'youtube_id',
-			'title'
-		];
+    static validateSearchKeys(where) {
+        // There are more, but we will only be searching by these keys
+        let validKeys = [
+            'youtube_id',
+            'title'
+        ];
 
-		for(let key in where) {
-			if(validKeys.indexOf(key) === -1) {
-				return false;
-			}
-		}
+        for(let key in where) {
+            if(validKeys.indexOf(key) === -1) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	static determineSearchTermType(searchTerm) {
-		if((""+searchTerm).substr(0,1) === "c") {
-			let id = (""+searchTerm).substr(1);
-			if(!isNaN(id)) {
-				return YogsDB.ID_SEARCH;
-			}
-		}
+    static determineSearchTermType(searchTerm) {
+        if((""+searchTerm).substr(0,1) === "c") {
+            let id = (""+searchTerm).substr(1);
+            if(!isNaN(id)) {
+                return YogsDB.ID_SEARCH;
+            }
+        }
 
-		return YogsDB.TEXT_SEARCH;
-	}
-
-
-	static getVideo(id) {
-
-		// Check if there is a "c" in front of the id
-		if((""+id).substr(0,1) === "c") {
-			id = (""+id).substr(1);
-		}
+        return YogsDB.TEXT_SEARCH;
+    }
 
 
-		if(isNaN(id)) {
-			return Promise.reject(false);
-		}
+    static getVideo(id) {
 
-		return new Promise((resolve, reject) => {
-			request({
-				url: YOGDB_API_URL + "/"+id,
-				method: "GET"
-			}, (err, response, body) => {
-				console.log("ID");
-				if(err) {
-					console.log(err);
-					return reject(err);
-				}
-				
-				let result = JSON.parse(body);
-				if(Object.keys(result).length > 0) {
-					return resolve(result);
-				}
+        // Check if there is a "c" in front of the id
+        if((""+id).substr(0,1) === "c") {
+            id = (""+id).substr(1);
+        }
 
-				return reject(false);
-				
-			});
-		});
 
-	}
+        if(isNaN(id)) {
+            return Promise.reject(false);
+        }
 
-	static searchTitleOrYoutubeID(searchTerm) {
-		return YogsDB.searchVideos({ title: searchTerm }).then(result => {
-			return result;
-		})
-		.catch(err => {
-			return YogsDB.searchVideos({ youtube_id: searchTerm });
-		});
-	}
+        return new Promise((resolve, reject) => {
+            request({
+                url: YOGDB_API_URL + "/"+id,
+                method: "GET"
+            }, (err, response, body) => {
+                console.log("ID");
+                if(err) {
+                    console.log(err);
+                    return reject(err);
+                }
+                
+                let result = JSON.parse(body);
+                if(Object.keys(result).length > 0) {
+                    return resolve(result);
+                }
 
-	static searchVideos(where = {} ) {
+                return reject(false);
+                
+            });
+        });
 
-		if(!YogsDB.validateSearchKeys(where)) {
-			return Promise.reject(false);
-		}
+    }
 
-		let whereQuery = [];
-		for(let x in where) {
-			whereQuery.push(x+"="+where[x]);
-		}
+    static searchTitleOrYoutubeID(searchTerm) {
+        return YogsDB.searchVideos({ title: searchTerm }).then(result => {
+            return result;
+        })
+        .catch(err => {
+            return YogsDB.searchVideos({ youtube_id: searchTerm });
+        });
+    }
 
-		whereQuery = "?" + whereQuery.join("&");
+    static searchVideos(where = {} ) {
 
-		return new Promise((resolve, reject) => {
-			request({
-				url: YOGDB_API_URL + whereQuery,
-				method: "GET"
-			}, (err, response, body) => {
-				console.log("SEARCH");
-				if(err) {
-					console.log(err);
-					return reject(err);
-				}
-				
-				let result = JSON.parse(body);
-				if(typeof result.data !== 'undefined' && result.data.length > 0) {
-					let firstValidResult = false;
-					for(let x=0; x<result.data.length;x++) {
-						let video = result.data[x];
-						if(video.channel.id !== YOGSLIVE_CHANNEL_ID) {
-							firstValidResult = video;
-							break;
-						}
-					}
+        if(!YogsDB.validateSearchKeys(where)) {
+            return Promise.reject(false);
+        }
 
-					if(firstValidResult) {
-						return resolve(firstValidResult);
-					}
-				}
-				console.log(result);
-				console.log(where);
-				return reject(false);
-				
-			});
-		});
-	}
+        let whereQuery = [];
+        for(let x in where) {
+            whereQuery.push(x+"="+where[x]);
+        }
+
+        whereQuery = "?" + whereQuery.join("&");
+
+        return new Promise((resolve, reject) => {
+            request({
+                url: YOGDB_API_URL + whereQuery,
+                method: "GET"
+            }, (err, response, body) => {
+                console.log("SEARCH");
+                if(err) {
+                    console.log(err);
+                    return reject(err);
+                }
+                
+                let result = JSON.parse(body);
+                if(typeof result.data !== 'undefined' && result.data.length > 0) {
+                    let firstValidResult = false;
+                    for(let x=0; x<result.data.length;x++) {
+                        let video = result.data[x];
+                        if(video.channel.id !== YOGSLIVE_CHANNEL_ID) {
+                            firstValidResult = video;
+                            break;
+                        }
+                    }
+
+                    if(firstValidResult) {
+                        return resolve(firstValidResult);
+                    }
+                }
+                console.log(result);
+                console.log(where);
+                return reject(false);
+                
+            });
+        });
+    }
 }
 
 module.exports = YogsDB;

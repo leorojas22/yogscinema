@@ -6,26 +6,26 @@ const config = require(process.cwd() + "/config");
 router.use(verifyJWT);
 
 router.get("/", (req, res) => {
-	return res.json({ result: true, user: req.user });
+    return res.json({ result: true, user: req.user });
 });
 
 router.post("/vote", (req, res) => {
-	return req.user.vote(req.body.voteOption).then(() => {
-		res.json({ result: true });
-	})
-	.catch(err => {
-		console.log(err);
-		res.json(err);
-	})
+    return req.user.vote(req.body.voteOption).then(() => {
+        res.json({ result: true });
+    })
+    .catch(err => {
+        console.log(err);
+        res.json(err);
+    })
 });
 
 router.get("/revoke", (req, res) => {
-	return req.user.revokeAccess(res).then((result => {
-		res.redirect(config.siteURL+"?revoked=1");
-	}))
-	.catch(err => {
-		res.redirect(config.siteURL+"?error=2");
-	})
+    return req.user.revokeAccess(res).then((result => {
+        res.redirect(config.siteURL+"?revoked=1");
+    }))
+    .catch(err => {
+        res.redirect(config.siteURL+"?error=2");
+    })
 });
 
 module.exports = router;

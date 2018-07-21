@@ -1,365 +1,365 @@
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html, body, #root {
-	width: 100%;
-	min-width: 100%;
+    width: 100%;
+    min-width: 100%;
 }
 
 body {
-	font-family: 'Roboto', arial, sans-serif;
-	background-color: #292d3e;
-	color: white;
+    font-family: 'Roboto', arial, sans-serif;
+    background-color: #292d3e;
+    color: white;
 }
 
 .App {
-	position: relative;
-	width: 80%;
-	margin: 0px auto;
-	background-color: transparent;
-	padding: 20px 0px;
+    position: relative;
+    width: 80%;
+    margin: 0px auto;
+    background-color: transparent;
+    padding: 20px 0px;
 }
 
 h1, h3 {
-	text-align: center;
-	font-weight: bold;
-	background: transparent;
-	box-shadow: none;
+    text-align: center;
+    font-weight: bold;
+    background: transparent;
+    box-shadow: none;
 }
 
 h1 {
-	font-size: 36px;
+    font-size: 36px;
 }
 
 h1.page-title {
-	padding-bottom: 20px;
-	margin-bottom: 0px;
+    padding-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 h3 {
-	font-size: 28px;
+    font-size: 28px;
 }
 
 small {
-	display: block;
+    display: block;
 }
 
 h3 small {
-	font-size: 16px;
-	font-weight: normal;
-	padding-top: 5px;
+    font-size: 16px;
+    font-weight: normal;
+    padding-top: 5px;
 }
 
 .alert {
-	display: inline-block;
-	padding: 15px 25px;
-	min-width: 50%;
-	border-radius: 3px;
+    display: inline-block;
+    padding: 15px 25px;
+    min-width: 50%;
+    border-radius: 3px;
 }
 
 .alert.alert-dark {
-	border: solid #1a1d27 1px;
-	background-color: rgba(0,0,0,.2);
+    border: solid #1a1d27 1px;
+    background-color: rgba(0,0,0,.2);
 }
 
 .twitch-embed {
-	position:relative;
-	margin: 0px  auto;
-	width: 940px;
-	height: 480px;
-	padding-bottom: 20px;
+    position:relative;
+    margin: 0px  auto;
+    width: 940px;
+    height: 480px;
+    padding-bottom: 20px;
 }
 
 .vote-options {
-	text-align: center;
-	padding: 0px;
-	padding-bottom: 30px;
+    text-align: center;
+    padding: 0px;
+    padding-bottom: 30px;
 }
 
 .text-center {
-	text-align: center;
+    text-align: center;
 }
 
 .connected-user {
-	position: relative;
-	text-align: center;
-	font-size: 18px;
+    position: relative;
+    text-align: center;
+    font-size: 18px;
 }
 
 .connected-user strong {
-	color: #bf91f9;
+    color: #bf91f9;
 }
 
 a {
-	color: #009cff; 
-	text-decoration: none;
+    color: #009cff; 
+    text-decoration: none;
 }
 
 a:hover {
-	color: #0084d8;
+    color: #0084d8;
 }
 
 button, .twitch-connect-btn, .btn {
-	font-family: 'Roboto', arial, sans-serif;
-	display: inline-block;
-	background-color: #009cff;
-	border: 0px;
-	color: white;
-	border-radius: 3px;
-	font-size: 32px;
-	padding: 6px 18px;
-	margin: 0px 10px;
-	box-shadow: 0px 0px 5px 3px rgba(0,0,0,.1);
-	transition: background-color .2s;
+    font-family: 'Roboto', arial, sans-serif;
+    display: inline-block;
+    background-color: #009cff;
+    border: 0px;
+    color: white;
+    border-radius: 3px;
+    font-size: 32px;
+    padding: 6px 18px;
+    margin: 0px 10px;
+    box-shadow: 0px 0px 5px 3px rgba(0,0,0,.1);
+    transition: background-color .2s;
 }
 
 button:hover, .twitch-connect-btn:hover, .btn:hover {
-	cursor: pointer;
-	background-color: #0084d8;
-	transition: background-color .2s;
-	color: white;
+    cursor: pointer;
+    background-color: #0084d8;
+    transition: background-color .2s;
+    color: white;
 }
 
 
 .btn-dark {
-	background-color: #191b23;
+    background-color: #191b23;
 }
 
 .twitch-connect-btn, .btn-purple {
-	background-color: #6043a1;
-	font-size: 24px;
+    background-color: #6043a1;
+    font-size: 24px;
 }
 
 .btn {
-	font-size: 18px;
+    font-size: 18px;
 }
 
 .btn-sm {
-	font-size: 16px;
+    font-size: 16px;
 }
 
 
 .btn.logout {
-	padding: 10px 18px;
-	margin-top: 16px;
+    padding: 10px 18px;
+    margin-top: 16px;
 }
 
 .twitch-connect-btn:hover, .btn-purple:hover {
-	background-color: #7d5bbe;
-	color: white;
+    background-color: #7d5bbe;
+    color: white;
 }
 
 .twitch-connect-btn img {
-	margin-top: 5px;
+    margin-top: 5px;
 }
 
 .twitch-connect-btn span {
-	display: inline-block;
-	vertical-align: top;
-	padding-top: 7px;
-	padding-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 7px;
+    padding-left: 10px;
 }
 
 button.vote {
-	font-weight: bold;
-	text-shadow: 0px 1px 0px black;
+    font-weight: bold;
+    text-shadow: 0px 1px 0px black;
 }
 
 button.vote-1 {
-	background-color: #e83356;
+    background-color: #e83356;
 }
 
 button.vote-1:hover {
-	background-color: #cd2d4c;
+    background-color: #cd2d4c;
 }
 
 
 button.vote-2 {
-	background-color: #f0a14e;
+    background-color: #f0a14e;
 }
 
 button.vote-2:hover {
-	background-color: #d38d43;
+    background-color: #d38d43;
 }
 
 button.vote-4 {
-	background-color: #5fd0d2;
+    background-color: #5fd0d2;
 }
 
 button.vote-4:hover {
-	background-color: #3dcbce;
+    background-color: #3dcbce;
 }
 
 button.vote-3 {
-	background-color: #78ca6a;
+    background-color: #78ca6a;
 }
 
 button.vote-3:hover {
-	background-color: #6ab05f;
+    background-color: #6ab05f;
 }
 
 .custom-votes {
-	position: relative;
-	margin: 0px auto;
-	width: 80%;
-	text-align: center;
+    position: relative;
+    margin: 0px auto;
+    width: 80%;
+    text-align: center;
 }
 
 .custom-vote {
-	display: inline-block;
-	width: 30%;
-	padding: 0px 10px;
-	padding-bottom: 40px;
+    display: inline-block;
+    width: 30%;
+    padding: 0px 10px;
+    padding-bottom: 40px;
 }
 
 .custom-vote button {
-	font-size: 24px;
+    font-size: 24px;
 }
 
 .custom-vote img {
-	width: 100%;
+    width: 100%;
 }
 
 .disclaimer {
-	position: relative;
-	margin: 0px auto;
-	width: 50%;
-	text-align: center;
-	padding-top: 20px;
+    position: relative;
+    margin: 0px auto;
+    width: 50%;
+    text-align: center;
+    padding-top: 20px;
 }
 
 .popup-message {
-	position: fixed;
-	top: 10px;
-	width: inherit;
-	padding: 20px;
-	border-radius: 5px;
-	opacity: 0;
-	transition: opacity .25s;
+    position: fixed;
+    top: 10px;
+    width: inherit;
+    padding: 20px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity .25s;
 }
 
 .popup-message.success {
-	background-color: #4a963d;
-	border: solid #34732a 1px;
+    background-color: #4a963d;
+    border: solid #34732a 1px;
 }
 
 .popup-message.error {
-	background-color: #e83356;
-	border: solid #b1213d 1px;
+    background-color: #e83356;
+    border: solid #b1213d 1px;
 }
 
 
 .popup-message.show {
-	opacity: 1;
-	transition: opacity .25s;
+    opacity: 1;
+    transition: opacity .25s;
 }
 
 .live-indicator {
-	position: relative;
-	text-align: center;
-	padding-bottom: 20px;
+    position: relative;
+    text-align: center;
+    padding-bottom: 20px;
 }
 
 .live-indicator .light {
-	display: inline-block;
-	width: 15px;
-	height: 15px;
-	border-radius: 100px;
-	margin-right: 10px;
-	vertical-align: top;
-	margin-top: 2px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 100px;
+    margin-right: 10px;
+    vertical-align: top;
+    margin-top: 2px;
 }
 
 .live-indicator .on {
-	background-color: rgba(65,177,46,1);
-	box-shadow: 0px 0px 5px 3px rgba(65,177,46,.2); 
-	/*background: radial-gradient(rgba(95,255,0,1), rgba(255,255,255,0), rgba(42,46,62,1));*/
+    background-color: rgba(65,177,46,1);
+    box-shadow: 0px 0px 5px 3px rgba(65,177,46,.2); 
+    /*background: radial-gradient(rgba(95,255,0,1), rgba(255,255,255,0), rgba(42,46,62,1));*/
 }
 
 .live-indicator .off {
-	background-color: rgba(232,51,86,1);
-	box-shadow: 0px 0px 5px 3px rgba(232,51,86,.2); 
-	/*background: radial-gradient(#e83356, rgba(255,255,255,0), rgba(42,46,62,1));*/
+    background-color: rgba(232,51,86,1);
+    box-shadow: 0px 0px 5px 3px rgba(232,51,86,.2); 
+    /*background: radial-gradient(#e83356, rgba(255,255,255,0), rgba(42,46,62,1));*/
 }
 
 .live-indicator span {
-	display: inline-block;
-	vertical-align: top;
+    display: inline-block;
+    vertical-align: top;
 }
 
 hr {
-	border: 0px;
-	border-top: solid #373d52 1px;
-	margin: 20px 0px;
+    border: 0px;
+    border-top: solid #373d52 1px;
+    margin: 20px 0px;
 }
 
 .show-chat-btn, .twitch-chat {
-	display: none;
+    display: none;
 }
 
 
 
 @media (max-width: 940px) {
-	.App {
-		width: 100%;
-	}
+    .App {
+        width: 100%;
+    }
 
-	.show-chat-btn {
-		display: inline-block;
-	}
+    .show-chat-btn {
+        display: inline-block;
+    }
 
-	.vote-options {
-		position: relative;
-		padding: 0px 10px;
-	}
-	button {
-		display: block;
-		width: 100%;
-		margin: 0px;
-		margin-bottom: 30px;
-		padding: 12px 0px;
-	}
+    .vote-options {
+        position: relative;
+        padding: 0px 10px;
+    }
+    button {
+        display: block;
+        width: 100%;
+        margin: 0px;
+        margin-bottom: 30px;
+        padding: 12px 0px;
+    }
 
-	.twitch-embed {
-		width: 100%;
-		height: auto;
-		display: none;
-	}
+    .twitch-embed {
+        width: 100%;
+        height: auto;
+        display: none;
+    }
 
-	.alert {
-		min-width: 90%;
-	}
+    .alert {
+        min-width: 90%;
+    }
 
-	.custom-vote {
-		width: 100%;
-	}
+    .custom-vote {
+        width: 100%;
+    }
 
-	.popup-message {
-		top: 0px;
-		border-radius: 0px;
-	}
+    .popup-message {
+        top: 0px;
+        border-radius: 0px;
+    }
 
-	.disclaimer {
-		width: 100%;
-	}
+    .disclaimer {
+        width: 100%;
+    }
 
-	.twitch-chat {
-		position: relative;
-		display: block;
-		width: 100%;
-		text-align: center;
-	}
+    .twitch-chat {
+        position: relative;
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
 
-	.twitch-chat iframe {
-		width: 100%;
-		height: 600px;
-		margin-bottom: 20px;
-	}
-	
-	.twitch-chat button {
-		display: inline-block;
-		width: auto;
-		padding: 10px 18px;
-	}
+    .twitch-chat iframe {
+        width: 100%;
+        height: 600px;
+        margin-bottom: 20px;
+    }
+    
+    .twitch-chat button {
+        display: inline-block;
+        width: auto;
+        padding: 10px 18px;
+    }
 }
