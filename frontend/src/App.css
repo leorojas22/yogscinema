@@ -77,6 +77,14 @@ h3 small {
     padding-bottom: 30px;
 }
 
+.vote-options .vote-option {
+    display: inline-block;
+}
+
+.vote-options .vote-option img {
+    display: none;
+}
+
 .text-center {
     text-align: center;
 }
@@ -326,6 +334,19 @@ hr {
         position: relative;
         padding: 0px 10px;
     }
+
+    .vote-options .vote-option {
+        display: block;
+        text-align: center;
+    }
+
+    .vote-options .vote-option img {
+        display: block;
+        margin: 0px auto;
+        margin-bottom: 10px;
+        max-width: 100%;
+    }
+
     button {
         display: block;
         width: 100%;

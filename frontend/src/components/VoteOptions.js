@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react';
 import CustomVote from './CustomVote';
 import { ajaxHelper } from '../helpers/ajax';
+import config from '../config';
+
+const API_URL = config.apiURL;
 
 class VoteOptions extends React.Component {
 
@@ -103,18 +106,56 @@ class VoteOptions extends React.Component {
                     this.state.lastVote ? (<p className="text-center">You last voted for: <strong>{this.state.lastVote}</strong></p>) : ""
                 }
                 <div className="vote-options">
-                    <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-1" onClick={this.vote.bind(this, 1)}>
-                        Vote 1
-                    </button>
-                    <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-2" onClick={this.vote.bind(this, 2)}>
-                        Vote 2
-                    </button>
-                    <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-3" onClick={this.vote.bind(this, 3)}>
-                        Vote 3
-                    </button>
-                    <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-4" onClick={this.vote.bind(this, 4)}>
-                        Vote 4
-                    </button>
+                    <div className="vote-option">
+                        {
+                            this.props.voteImages ? (
+                                <img src={API_URL+"/images/crop0.png"} />
+                            )
+                            :
+                            ""
+                        }
+                        <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-1" onClick={this.vote.bind(this, 1)}>
+                            Vote 1
+                        </button>
+                    </div>
+                    <div className="vote-option">
+                        {
+                            this.props.voteImages ? (
+                                <img src={API_URL+"/images/crop1.png"} />
+                            )
+                            :
+                            ""
+                        }
+                        <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-2" onClick={this.vote.bind(this, 2)}>
+                            Vote 2
+                        </button>
+                    </div>
+
+                    <div className="vote-option">
+                        {
+                            this.props.voteImages ? (
+                                <img src={API_URL+"/images/crop2.png"} />
+                            )
+                            :
+                            ""
+                        }
+                        <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-3" onClick={this.vote.bind(this, 3)}>
+                            Vote 3
+                        </button>
+                    </div>
+
+                    <div className="vote-option">
+                        {
+                            this.props.voteImages ? (
+                                <img src={API_URL+"/images/crop3.png"} />
+                            )
+                            :
+                            ""
+                        }
+                        <button type="button" disabled={this.state.isVoting ? "disabled" : ""} className="vote vote-4" onClick={this.vote.bind(this, 4)}>
+                            Vote 4
+                        </button>
+                    </div>
                 </div>
                 <h3>
                     Custom Votes

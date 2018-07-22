@@ -3,3 +3,4 @@
 /frontend/node_modules/*
 /.vscode
 /backend/config.js.live
+/ignore/*

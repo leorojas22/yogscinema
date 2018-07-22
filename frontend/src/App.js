@@ -21,7 +21,8 @@ class App extends Component {
         this.state = {
             connected		: false,
             popupMessage	: false,
-            isLive			: false
+            isLive			: false,
+            voteImages      : false
         }
 
         this.togglePopupMessage = this.togglePopupMessage.bind(this);
@@ -83,9 +84,10 @@ class App extends Component {
         
     }
 
-    updateLiveStatus(status) {
+    updateLiveStatus(response) {
         this.setState({
-            isLive: status
+            isLive: response.result,
+            voteImages: response.voteImages
         });
     }
 
@@ -144,7 +146,7 @@ class App extends Component {
                     this.state.connected ? (
                         <Fragment>
                             <ConnectedUser user={this.state.connected} />
-                            <VoteOptions isLive={this.state.isLive} togglePopupMessage={this.togglePopupMessage} />
+                            <VoteOptions voteImages={this.state.voteImages} isLive={this.state.isLive} togglePopupMessage={this.togglePopupMessage} />
                         </Fragment>
                     )
                     :

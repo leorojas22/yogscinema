@@ -71,8 +71,8 @@ class NowPlaying {
 			}
 		}
 
-		return false;
-		
+		return false;	
+	
 	}
 
 }

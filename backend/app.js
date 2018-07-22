@@ -33,10 +33,12 @@ app.use("/votes", require("./routes/customvotes"));
 
 
 const CustomVote = require("./models/CustomVote");
-
+CustomVote.monitorChatForVotes();
 if(!config.isDev) {
-    CustomVote.monitorChatForVotes();
+    
 }
+
+app.use(express.static("public"));
 
 // Monitor yogs twitch channel for yogscinema
 // Check every 5 minutes
@@ -44,6 +46,13 @@ const Cron = require("./helpers/Cron");
 setInterval(() => {
     Cron.checkYogsChannel();
 }, 300000);
+
+// Check if we shout take a screen shot of the voting options
+const Screenshot = require(process.cwd() + "/helpers/Screenshot");
+setInterval(() => {
+    Screenshot.monitor();
+}, 1000);
+
 
 app.listen(3001, () => {
     console.log("Listening on port 3001");

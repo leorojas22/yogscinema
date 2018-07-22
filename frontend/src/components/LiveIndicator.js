@@ -51,7 +51,7 @@ class LiveIndicator extends React.Component {
         }).then(response => {
 
             if(typeof response.result !== 'undefined') {
-                this.props.updateLiveStatus(response.result);
+                this.props.updateLiveStatus(response);
 
                 if(response.nowPlaying && response.nowPlaying.timeRemaining > 0) {
                     this.setState({
@@ -78,7 +78,7 @@ class LiveIndicator extends React.Component {
 
         this.checkLiveInterval = setTimeout(() => {
             this.checkIfLive();
-        }, 120000)
+        }, 10000)
     }
 
     getVideoTime() {

@@ -37,8 +37,10 @@ module.exports = (app) => {
                     videoLength     : config.chatMonitor.nowPlaying.videoLength            
                 }
             }
-
+            
             output.nowPlaying = nowPlaying;
+            output.voteImages = config.imageProcessing.screenshotSaved;
+
         }
 
         res.json(output);
