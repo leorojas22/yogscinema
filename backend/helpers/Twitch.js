@@ -151,9 +151,9 @@ class Twitch {
                     return reject({ message: "Unable to revoke access.  You will have to do it manually through your Twitch dashboard." });
                 }
                 */
-               
+
                 let result = (""+body).trim();
-                
+                console.log(result);
                 if(result === "") {
                     return resolve(true);
                 }
