@@ -145,21 +145,7 @@ class Twitch {
                 url		: TWITCH_OAUTH_URL + "revoke" + queryString,
                 method	: "POST"
             }, (err, data, body) => {
-                /*
-                if(err) {
-                    console.log(err);
-                    return reject({ message: "Unable to revoke access.  You will have to do it manually through your Twitch dashboard." });
-                }
-                */
-
-                let result = (""+body).trim();
-                console.log(result);
-                if(result === "") {
-                    return resolve(true);
-                }
-                else {
-                    return reject(false);
-                }
+                return resolve(true);
             });
         });
     }
