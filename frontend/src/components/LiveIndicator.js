@@ -175,7 +175,7 @@ class LiveIndicator extends React.Component {
                         )
                         :
                         (
-                            !this.state.hideCinemaButton ? 
+                            !this.state.hideCinemaButton && this.props.connected ? 
                             (
                                 <button className="btn-purple btn-auto btn btn-sm cinema-button" type="button" onClick={this.sayCinema} disabled={this.state.cinemaPending}>
                                     {
