@@ -288,6 +288,11 @@ button.vote-3:hover {
     vertical-align: top;
 }
 
+.now-playing-text {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
 hr {
     border: 0px;
     border-top: solid #373d52 1px;
@@ -296,6 +301,14 @@ hr {
 
 .show-chat-btn, .twitch-chat {
     display: none;
+}
+
+.btn-auto {
+    width: auto;
+}
+
+.cinema-button {
+    margin-bottom: 20px;
 }
 
 

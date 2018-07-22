@@ -28,6 +28,17 @@ module.exports = (app) => {
         if(config.yogsChannel) {
             output.result 		= config.yogsChannel.title.indexOf("YogsCinema") !== -1;
             output.last_checked = config.yogsChannel.last_checked;
+            
+            let nowPlaying = false;
+            if(config.chatMonitor.nowPlaying) {
+                nowPlaying = {
+                    title           : config.chatMonitor.nowPlaying.title,
+                    timeRemaining   : config.chatMonitor.nowPlaying.timeRemaining,
+                    videoLength     : config.chatMonitor.nowPlaying.videoLength            
+                }
+            }
+
+            output.nowPlaying = nowPlaying;
         }
 
         res.json(output);

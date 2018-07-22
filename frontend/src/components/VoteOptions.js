@@ -118,7 +118,7 @@ class VoteOptions extends React.Component {
                 </div>
                 <h3>
                     Custom Votes
-                    <small>Seen in the last 3 minutes</small>
+                    <small>Seen in the last 2 minutes</small>
                 </h3>
                 <div className="custom-votes">
                     {

@@ -19,6 +19,15 @@ router.post("/vote", (req, res) => {
     })
 });
 
+router.post("/cinema", (req, res) => {
+    return req.user.sayCinemaCommand().then(() => {
+        res.json({ result: true });
+    })
+    .catch(err => {
+        res.json(err);
+    });
+});
+
 router.get("/revoke", (req, res) => {
     return req.user.revokeAccess(res).then((result => {
         res.redirect(config.siteURL+"?revoked=1");

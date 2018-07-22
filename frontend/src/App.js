@@ -137,7 +137,7 @@ class App extends Component {
             <div className="App">
                 <PageTitle />
 
-                <LiveIndicator updateLiveStatus={this.updateLiveStatus} isLive={this.state.isLive} />
+                <LiveIndicator updateLiveStatus={this.updateLiveStatus} isLive={this.state.isLive} togglePopupMessage={this.togglePopupMessage} />
 
                 <TwitchEmbed />
                 {

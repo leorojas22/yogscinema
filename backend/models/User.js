@@ -10,6 +10,7 @@ const md5					= require("md5");
 
 const TWITCH_CHANNEL 		= config.voting.channel;
 const WAIT_BETWEEN_VOTES 	= config.voting.waitTime;
+const WAIT_BETWEEN_CINEMA   = config.voting.waitTime;
 
 class User extends BaseModel {
     static get tableName() {
@@ -54,7 +55,7 @@ class User extends BaseModel {
         let diff 		= now.diff(lastMessage, 'seconds');
 
         if(diff < WAIT_BETWEEN_VOTES) {
-            return Promise.reject({ message: "Please wait 1 minute before voting again." });
+            return Promise.reject({ message: "Please wait "+(WAIT_BETWEEN_VOTES - diff)+" seconds before voting again." });
         }
 
         let predefinedValues = [1,2,3,4];
@@ -67,6 +68,61 @@ class User extends BaseModel {
         return CustomVote.verify("!vote "+option);
     }
 
+    getTwitchClient() {
+        if(typeof this.twitchClient === 'undefined') {
+            let opts = {
+                identity: {
+                    username: this.username,
+                    password: "oauth:"+this.accessToken
+                },
+                channels: [
+                    TWITCH_CHANNEL
+                ]
+            }
+    
+            this.twitchClient = new tmi.client(opts);
+        }
+
+        return this.twitchClient;
+    }
+
+    chat(message) {
+        return this.verifyAccessToken().then(() => {
+            console.log("VALID ACCESS TOKEN");
+
+            return this.getTwitchClient().connect().then(() => {
+                // Send message
+                return this.getTwitchClient().say(TWITCH_CHANNEL, message);
+            })
+            .then(() => {
+                // Disconnect
+                return this.getTwitchClient().disconnect();
+            })
+            .catch(err => {
+                return Promise.reject({ err: "Unable to vote at this time." });
+            });
+        })
+    }
+
+    sayCinemaCommand() {
+        
+        let lastMessage = moment(this.last_cinema_time);
+        let now 		= moment();
+        let diff 		= now.diff(lastMessage, 'seconds');
+
+        if(diff < WAIT_BETWEEN_VOTES) {
+            return Promise.reject({ message: "Please wait "+(WAIT_BETWEEN_VOTES - diff)+" seconds before saying the !cinema command again." });
+        }
+
+        return this.chat("!cinema").then(() => {
+            // Update last message sent
+            return User.query().update({ last_cinema_time: new Date() }).where({ id: this.id });
+        })
+        .catch(err => {
+            return Promise.reject({ result: false, message: "Unable to say !cinema command at this time." });
+        });
+    }
+
     vote(option) {
 
         return this.validateVote(option).then(() => {
@@ -74,34 +130,12 @@ class User extends BaseModel {
             return this.verifyAccessToken().then(() => {
                 console.log("VALID ACCESS TOKEN");
 
-                let opts = {
-                    identity: {
-                        username: this.username,
-                        password: "oauth:"+this.accessToken
-                    },
-                    channels: [
-                        TWITCH_CHANNEL
-                    ]
-                }
-        
-                let client = new tmi.client(opts);
-        
-                return client.connect().then(() => {
-                    // Send message
-                    return client.say(TWITCH_CHANNEL, "!vote "+option);
-                })
-                .then(() => {
-
+                return this.chat("!vote "+option).then(() => {
                     // Update last message sent
-                    let updateLastMessage = User.query().update({ last_vote_time: new Date(), last_vote: option }).where({ id: this.id });
-
-                    // Disconnect
-                    let disconnect = client.disconnect();
-
-                    return Promise.all([updateLastMessage, disconnect]);
+                    return User.query().update({ last_vote_time: new Date(), last_vote: option }).where({ id: this.id });
                 })
                 .catch(err => {
-                    return Promise.reject({ err: "Unable to vote at this time." });
+                    return Promise.reject({ result: false, message: "Unable to vote at this time." });
                 });
             })
         });

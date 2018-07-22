@@ -2,6 +2,7 @@ const BaseModel = require(process.cwd() + "/models/BaseModel");
 const YogsDB = require(process.cwd() + "/helpers/YogsDB");
 const tmi = require("tmi.js");
 const config = require(process.cwd() + "/config");
+const NowPlaying = require(process.cwd() + "/helpers/NowPlaying");
 
 class CustomVote extends BaseModel {
 
@@ -10,8 +11,8 @@ class CustomVote extends BaseModel {
     }
 
     static get LOOKBACK_TIME() {
-        // Look back 3 minutes
-        return 180000; 
+        // Look back 2 minutes
+        return 120000; 
     }
 
     static get TYPE_VOTE_ADD() {
@@ -113,30 +114,6 @@ class CustomVote extends BaseModel {
 
     }
 
-    static parseCinemaVideoTimeMessage(message) {
-        let lowerCaseMessage = message.toLowerCase();
-        if(lowerCaseMessage.substr(0, ("now playing:").length) === "now playing:") {
-            console.log(message);
-
-            let videoTimePattern = /\[\d\d\:\d\d\:\d\d \/ \d\d\:\d\d\:\d\d\]/;
-            let rawVideoTime = message.match(videoTimePattern);
-            if(rawVideoTime) {
-                let videoTime = (rawVideoTime[0].replace(/[\[\]]/g, "")).split(" / ");
-                if(videoTime.length === 2) {
-                    console.log(videoTime);
-                    let videoTimeSeconds = [];
-                    // Convert each time value into seconds
-                    for(let x = 0; x<videoTime.length; x++) {
-                        
-                    }
-                }
-            }
-            
-
-        }
-    }
-
-
     static monitorChatForVotes() {
         let opts = {
             identity: {
@@ -210,7 +187,10 @@ class CustomVote extends BaseModel {
             else if(userstate.username.toLowerCase() === config.chatMonitor.cinemaBot) {
                 // Check if jaffa mod has said "Now Playing..."
                 // Example Now Playing message: "Now playing: Minecraft - MoonQuest 42 - King of the Squids [00:01:25 / 00:17:37] - Cinema schedule: https://bit.ly/cinemaschedule"
-                this.parseCinemaVideoTimeMessage(message);
+                let nowPlaying = NowPlaying.createFromChatMessage(message, timeNow);
+                if(nowPlaying) {
+                    config.chatMonitor.nowPlaying = nowPlaying;
+                }
             }
 
         });
