@@ -22,9 +22,9 @@ class Screenshot {
         const saveVideoCommand = imageProcessing.livestreamer + 
                                 " --player-continuous-http --player-no-close " + imageProcessing.streamURL + " best" +
                                 " --twitch-oauth-token " + imageProcessing.oauthToken + " -O | " + imageProcessing.ffmpeg +
-                                " -y -t 3 -i - -strict -2 " + imageProcessing.savePath + "screenshot.mp4";
+                                " -y -t 1 -i - -strict -2 " + imageProcessing.savePath + "screenshot.mp4";
 
-        const saveScreenshotCommand = imageProcessing.ffmpeg + " -y -ss 00:00:01 -i " + imageProcessing.savePath + "screenshot.mp4 -vframes 1 -q:v 2 " + 
+        const saveScreenshotCommand = imageProcessing.ffmpeg + " -y -ss 00:00:00 -i " + imageProcessing.savePath + "screenshot.mp4 -vframes 1 -q:v 2 " + 
                                     imageProcessing.savePath + "screenshot.jpg";
 
         return exec(saveVideoCommand).then((output, err) => {
