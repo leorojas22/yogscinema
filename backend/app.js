@@ -33,9 +33,9 @@ app.use("/votes", require("./routes/customvotes"));
 
 
 const CustomVote = require("./models/CustomVote");
-CustomVote.monitorChatForVotes();
+
 if(!config.isDev) {
-    
+    CustomVote.monitorChatForVotes();
 }
 
 // Monitor yogs twitch channel for yogscinema
