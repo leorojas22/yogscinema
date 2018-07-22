@@ -59,7 +59,7 @@ class LiveIndicator extends React.Component {
                         timeRemaining       : response.nowPlaying.timeRemaining,
                         videoLength         : response.nowPlaying.videoLength
                     });
-                    console.log("TESTING");
+
                     this.startTimeRemainingCounter();
                 }
                 else {

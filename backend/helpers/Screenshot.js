@@ -22,7 +22,7 @@ class Screenshot {
         const saveVideoCommand = imageProcessing.livestreamer + 
                                 " --player-continuous-http --player-no-close " + imageProcessing.streamURL + " best" +
                                 " --twitch-oauth-token " + imageProcessing.oauthToken + " -O | " + imageProcessing.ffmpeg +
-                                " -y -t 3 -i - " + imageProcessing.savePath + "screenshot.mp4";
+                                " -y -t 3 -i - -strict -2 " + imageProcessing.savePath + "screenshot.mp4";
 
         const saveScreenshotCommand = imageProcessing.ffmpeg + " -y -ss 00:00:01 -i " + imageProcessing.savePath + "screenshot.mp4 -vframes 1 -q:v 2 " + 
                                     imageProcessing.savePath + "screenshot.jpg";
@@ -107,7 +107,7 @@ class Screenshot {
     }
 
     static monitor() {
-        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 90 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
+        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 99 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
             this.screenshotVotes();
         }
         else if(!config.chatMonitor.nowPlaying || (config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining === 0)) {
