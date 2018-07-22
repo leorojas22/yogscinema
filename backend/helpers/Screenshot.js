@@ -107,7 +107,7 @@ class Screenshot {
     }
 
     static monitor() {
-        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 99 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
+        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 100 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
             this.screenshotVotes();
         }
         else if(!config.chatMonitor.nowPlaying || (config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining === 0)) {
