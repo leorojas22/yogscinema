@@ -109,7 +109,7 @@ class VoteOptions extends React.Component {
                     <div className="vote-option">
                         {
                             this.props.voteImages ? (
-                                <img src={API_URL+"/images/crop0.png"} />
+                                <img src={API_URL+"/images/crop0.png?t="+this.props.voteImages} />
                             )
                             :
                             ""
@@ -121,7 +121,7 @@ class VoteOptions extends React.Component {
                     <div className="vote-option">
                         {
                             this.props.voteImages ? (
-                                <img src={API_URL+"/images/crop1.png"} />
+                                <img src={API_URL+"/images/crop1.png?t="+this.props.voteImages} />
                             )
                             :
                             ""
@@ -134,7 +134,7 @@ class VoteOptions extends React.Component {
                     <div className="vote-option">
                         {
                             this.props.voteImages ? (
-                                <img src={API_URL+"/images/crop2.png"} />
+                                <img src={API_URL+"/images/crop2.png?t="+this.props.voteImages} />
                             )
                             :
                             ""
@@ -147,7 +147,7 @@ class VoteOptions extends React.Component {
                     <div className="vote-option">
                         {
                             this.props.voteImages ? (
-                                <img src={API_URL+"/images/crop3.png"} />
+                                <img src={API_URL+"/images/crop3.png?t="+this.props.voteImages} />
                             )
                             :
                             ""

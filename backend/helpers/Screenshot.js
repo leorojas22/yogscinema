@@ -98,7 +98,8 @@ class Screenshot {
         })
         .then(() => {
             console.log("screenshot process success!");
-            config.imageProcessing.screenshotSaved = true;
+            config.imageProcessing.screenshotSaved = Date.now();
+            config.imageProcessing.screenshotStarted = false;
         })
         .catch(err => {
             // error
@@ -107,8 +108,16 @@ class Screenshot {
     }
 
     static monitor() {
+        // Only continue if we know whats playing, the time remaining is between 98 and 1 second and we haven't already started taking a screenshot
         if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 98 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
-            this.screenshotVotes();
+            let lastScreenshot = config.imageProcessing.screenshotSaved;
+
+            // If there hasn't been a screenshot, take one, OR
+            // If there is a last screenshot, only take a new one if its 5 seconds later
+            if(!lastScreenshot || (lastScreenshot && (Date.now() - lastScreenshot) >= 5000)) {
+                this.screenshotVotes();
+            }
+        
         }
         else if(!config.chatMonitor.nowPlaying || (config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining === 0)) {
             config.imageProcessing.screenshotStarted = false;
