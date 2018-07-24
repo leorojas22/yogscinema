@@ -26,6 +26,14 @@ class NowPlaying {
 		return title;
 	}
 
+	getFormattedData() {
+		return {
+			title           : this.title,
+			timeRemaining	: this.timeRemaining,
+			videoLength     : this.videoLength            
+		}
+	}
+
 	static getRawVideoTimeFromMessage(message) {
 		let videoTimePattern = /\[\d\d\:\d\d\:\d\d \/ \d\d\:\d\d\:\d\d\]/;
 		let rawVideoTime = message.match(videoTimePattern);
@@ -37,13 +45,11 @@ class NowPlaying {
 
 		let lowerCaseMessage = message.toLowerCase();
 		if(lowerCaseMessage.substr(0, ("now playing:").length) === "now playing:") {
-			console.log(message);
 
 			let rawVideoTime = this.getRawVideoTimeFromMessage(message);
 			if(rawVideoTime) {
 				let videoTime = (rawVideoTime[0].replace(/[\[\]]/g, "")).split(" / ");
 				if(videoTime.length === 2) {
-					console.log(videoTime);
 					let videoTimeSeconds = [];
 					// Convert each time value into seconds
 					for(let x = 0; x<videoTime.length; x++) {

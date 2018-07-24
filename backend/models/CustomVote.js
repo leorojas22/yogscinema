@@ -169,7 +169,7 @@ class CustomVote extends BaseModel {
                         else {
                             saveInfo.vote_add_command = search.vote_command;
                         }
-                        console.log(saveInfo);
+
                         CustomVote.query().insert(saveInfo).then(customVote => {
                             console.log(customVote);
                         })

@@ -14,6 +14,8 @@ import TwitchChat from './components/TwitchChat';
 
 import config from './config.js';
 
+import socket from './helpers/socket';
+
 class App extends Component {
 
     constructor(props) {
@@ -30,7 +32,6 @@ class App extends Component {
     }
 
     componentDidMount() {
-
         // Check if user is connected
         ajaxHelper("/user", {
             method: "GET"
@@ -82,6 +83,11 @@ class App extends Component {
             
         }
         
+        socket.on("showImages", (imageID) => {
+            this.setState({
+                voteImages: imageID
+            });
+        })
     }
 
     updateLiveStatus(response) {
@@ -90,7 +96,6 @@ class App extends Component {
             voteImages: response.voteImages
         });
     }
-
 
     clearPopupMessage() {
         if(this.state.popupMessage) {

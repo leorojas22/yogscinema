@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { ajaxHelper } from '../helpers/ajax';
 
+import socket from '../helpers/socket';
+
 class LiveIndicator extends React.Component {
 
     constructor(props) {
@@ -22,6 +24,16 @@ class LiveIndicator extends React.Component {
 
     componentDidMount() {
         this.checkIfLive();
+
+        socket.on("nowPlaying", (nowPlaying) => {
+            this.setState({
+                currentVideoTitle   : nowPlaying.title,
+                timeRemaining       : nowPlaying.timeRemaining,
+                videoLength         : nowPlaying.videoLength
+            });
+
+            this.startTimeRemainingCounter();
+        });
     }
 
     startTimeRemainingCounter() {
@@ -35,6 +47,10 @@ class LiveIndicator extends React.Component {
                 this.setState({
                     timeRemaining: this.state.timeRemaining-1
                 });
+            }
+            else {
+                window.clearInterval(this.timeRemainingInterval);
+                this.timeRemainingInterval = null;
             }
         }, 1000);
     }
@@ -52,7 +68,6 @@ class LiveIndicator extends React.Component {
 
             if(typeof response.result !== 'undefined') {
                 this.props.updateLiveStatus(response);
-
                 if(response.nowPlaying && response.nowPlaying.timeRemaining > 0) {
                     this.setState({
                         currentVideoTitle   : response.nowPlaying.title,
@@ -61,9 +76,6 @@ class LiveIndicator extends React.Component {
                     });
 
                     this.startTimeRemainingCounter();
-                }
-                else {
-                    console.log(response.nowPlaying);
                 }
 
                 return true;
@@ -78,7 +90,7 @@ class LiveIndicator extends React.Component {
 
         this.checkLiveInterval = setTimeout(() => {
             this.checkIfLive();
-        }, 10000)
+        }, 120000)
     }
 
     getVideoTime() {

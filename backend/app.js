@@ -1,10 +1,12 @@
 const express = require("express");
-const tmi = require("tmi.js");
 const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const config = require("./config");
 const app = express();
+const http = require("http").Server(app);
+
+const io = require("socket.io")(http, { transports: ['websocket'] });
 
 const knex = require("knex")({
     client: 'mysql',
@@ -24,8 +26,6 @@ app.use(cookieParser());
 
 const { Model } = require("objection");
 Model.knex(knex);
-
-const Twitch = require("./helpers/Twitch");
 
 require("./routes.js")(app);
 app.use("/user", require("./routes/user"));
@@ -53,8 +53,36 @@ setInterval(() => {
     Screenshot.monitor();
 }, 1000);
 
+io.on("connection", (socket) => {
+    let lastNowPlaying = JSON.stringify(config.chatMonitor.nowPlaying);
+    let lastSavedImage = config.imageProcessing.screenshotSaved;
+    setInterval(() => {
 
-app.listen(3001, () => {
+        // Let client app know that there is an updated now playing
+        let currentNowPlaying = JSON.stringify(config.chatMonitor.nowPlaying);
+        if(currentNowPlaying != lastNowPlaying && config.chatMonitor.nowPlaying) {
+            lastNowPlaying = currentNowPlaying;
+            io.emit("nowPlaying", config.chatMonitor.nowPlaying.getFormattedData());
+        }
+
+        // Let client app know that there are new vote images
+        let currentSavedImage = config.imageProcessing.screenshotSaved;
+        if(lastSavedImage != currentSavedImage) {
+            lastSavedImage = currentSavedImage;
+            setTimeout(() => {
+                io.emit("showImages", currentSavedImage);
+            }, 1000);
+        }
+
+
+    }, 1000);
+
+});
+
+
+http.listen(3001, () => {
     console.log("Listening on port 3001");
     Cron.checkYogsChannel();
 });
+
+

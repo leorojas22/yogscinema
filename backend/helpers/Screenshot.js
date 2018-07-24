@@ -41,7 +41,6 @@ class Screenshot {
                 return Promise.reject("Unable to save screenshot image.");
             }
 
-            console.log("saved screenshot!");
             return Promise.resolve();
         })
         .catch(err => {
@@ -60,7 +59,6 @@ class Screenshot {
          */
 
         return jimp.read(imageProcessing.savePath + "screenshot.jpg").then(image => {
-            console.log(image.getExtension());
             let promises = [];
             const imageSizes = [
                 { w: 320, h: 95 },
@@ -80,24 +78,22 @@ class Screenshot {
             return Promise.all(promises);
         })
         .then(result => {
-            console.log("cropped image");
             return Promise.resolve();
         })
         .catch(err => {
             console.log("image save error");
+            console.log(err);
         });
 
     }
     
     static screenshotVotes() {
-        console.log("screenshot process started!");
         config.imageProcessing.screenshotStarted = true;
 
         this.capture().then(() => {
             return this.crop();
         })
         .then(() => {
-            console.log("screenshot process success!");
             config.imageProcessing.screenshotSaved = Date.now();
             config.imageProcessing.screenshotStarted = false;
         })

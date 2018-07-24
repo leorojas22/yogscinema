@@ -31,11 +31,7 @@ module.exports = (app) => {
             
             let nowPlaying = false;
             if(config.chatMonitor.nowPlaying) {
-                nowPlaying = {
-                    title           : config.chatMonitor.nowPlaying.title,
-                    timeRemaining   : config.chatMonitor.nowPlaying.timeRemaining,
-                    videoLength     : config.chatMonitor.nowPlaying.videoLength            
-                }
+                nowPlaying = config.chatMonitor.nowPlaying.getFormattedData();
             }
             
             output.nowPlaying = nowPlaying;
