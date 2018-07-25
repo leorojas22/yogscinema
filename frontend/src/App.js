@@ -11,10 +11,12 @@ import TwitchConnectButton from './components/TwitchConnectButton';
 import PageTitle from './components/PageTitle';
 import ConnectedUser from './components/ConnectedUser';
 import TwitchChat from './components/TwitchChat';
+import NowPlaying from './components/NowPlaying';
 
 import config from './config.js';
 
 import socket from './helpers/socket';
+
 
 class App extends Component {
 
@@ -24,15 +26,61 @@ class App extends Component {
             connected		: false,
             popupMessage	: false,
             isLive			: false,
-            voteImages      : false
+            voteImages      : false,
+            currentVideoTitle   : false,
+            timeRemaining       : 0,
+            videoLength         : 0,
+            extraTimeRemaining  : 0
         }
 
         this.togglePopupMessage = this.togglePopupMessage.bind(this);
         this.updateLiveStatus 	= this.updateLiveStatus.bind(this);
+        this.setNowPlayingState = this.setNowPlayingState.bind(this);
+        this.startTimeRemainingCounter = this.startTimeRemainingCounter.bind(this);
+
+
+        this.timeRemainingInterval  = null;
     }
 
-    componentDidMount() {
-        // Check if user is connected
+    setNowPlayingState(nowPlaying) {
+        this.setState({
+            currentVideoTitle   : nowPlaying.title,
+            timeRemaining       : nowPlaying.timeRemaining,
+            videoLength         : nowPlaying.videoLength,
+            extraTimeRemaining  : nowPlaying.extraTimeRemaining
+        });
+    }
+
+    
+    // Starts a timer to decrease the timeRemaining and extraTimeRemaining by 1 every second until they reach 0
+    startTimeRemainingCounter() {
+
+        if(this.timeRemainingInterval) {
+            window.clearInterval(this.timeRemainingInterval);
+        }
+
+        this.timeRemainingInterval = window.setInterval(() => {
+            if(this.state.timeRemaining > 0) {
+                this.setState({
+                    timeRemaining: this.state.timeRemaining-1
+                });
+            }
+            
+            if(this.state.extraTimeRemaining > 0) {
+                this.setState({
+                    extraTimeRemaining: this.state.extraTimeRemaining-1
+                });
+            }
+            
+            if(this.state.extraTimeRemaining === 0 && this.state.timeRemaining === 0) {
+                window.clearInterval(this.timeRemainingInterval);
+                this.timeRemainingInterval = null;
+            }
+
+        }, 1000);
+    }
+
+    checkIfUserIsConnected() {
         ajaxHelper("/user", {
             method: "GET"
         }).then(response => {
@@ -47,7 +95,9 @@ class App extends Component {
                 connected: false
             })
         });
+    }
 
+    parseQueryString() {
         if(window.location.search !== "") {
             let popupMessage = false;
             setTimeout(() => {
@@ -75,6 +125,7 @@ class App extends Component {
                 }
 
                 if(popupMessage) {
+                    // Show the popup message and remove the query string
                     this.togglePopupMessage(popupMessage.type, popupMessage.message);
                     window.history.pushState({}, "YogsCinema Vote", config.siteURL);
                 }
@@ -82,12 +133,27 @@ class App extends Component {
             }, 100);
             
         }
+    }
+
+    componentDidMount() {
+        // Check if user is connected
+        this.checkIfUserIsConnected();
+
+        // When coming to the page and there's a query string, check to see if it's something we expect
+        this.parseQueryString();
         
+        // Check to see if there are vote images to show
         socket.on("showImages", (imageID) => {
             this.setState({
                 voteImages: imageID
             });
-        })
+        });
+
+        // Check to see if there is now playing info
+        socket.on("nowPlaying", (nowPlaying) => {
+            this.setNowPlayingState(nowPlaying);
+            this.startTimeRemainingCounter();
+        });
     }
 
     updateLiveStatus(response) {
@@ -144,14 +210,39 @@ class App extends Component {
             <div className="App">
                 <PageTitle />
 
-                <LiveIndicator connected={this.state.connected} updateLiveStatus={this.updateLiveStatus} isLive={this.state.isLive} togglePopupMessage={this.togglePopupMessage} />
+                <LiveIndicator 
+                    setNowPlayingState          = {this.setNowPlayingState} 
+                    connected                   = {this.state.connected} 
+                    updateLiveStatus            = {this.updateLiveStatus} 
+                    isLive                      = {this.state.isLive} 
+                    togglePopupMessage          = {this.togglePopupMessage} 
+                    currentVideoTitle           = {this.state.currentVideoTitle}
+                    timeRemaining               = {this.state.timeRemaining}
+                    videoLength                 = {this.state.videoLength}
+                    extraTimeRemaining          = {this.state.extraTimeRemaining}
+                    startTimeRemainingCounter   = {this.startTimeRemainingCounter}
+                />
+                <NowPlaying
+                    connected                   = {this.state.connected} 
+                    isLive                      = {this.state.isLive} 
+                    togglePopupMessage          = {this.togglePopupMessage} 
+                    currentVideoTitle           = {this.state.currentVideoTitle}
+                    timeRemaining               = {this.state.timeRemaining}
+                    videoLength                 = {this.state.videoLength}
+                    extraTimeRemaining          = {this.state.extraTimeRemaining}
+                />
 
                 <TwitchEmbed />
                 {
                     this.state.connected ? (
                         <Fragment>
                             <ConnectedUser user={this.state.connected} />
-                            <VoteOptions voteImages={this.state.voteImages} isLive={this.state.isLive} togglePopupMessage={this.togglePopupMessage} />
+                            <VoteOptions 
+                                extraTimeRemaining  = {this.state.extraTimeRemaining} 
+                                voteImages          = {this.state.voteImages} 
+                                isLive              = {this.state.isLive} 
+                                togglePopupMessage  = {this.togglePopupMessage} 
+                            />
                         </Fragment>
                     )
                     :

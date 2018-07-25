@@ -14,9 +14,15 @@ const jimp = require("jimp");
  */
 
 const imageProcessing = config.imageProcessing;
+
+// The amount of pixels down on the screenshot to start cropping the votes
 const CROP_Y = 470;
 
+// The extra time at the end of videos to vote even though the video is over
+const EXTRA_TIME = config.voting.additionalVoteTime;
+
 class Screenshot {
+
     static capture() {
         
         const saveVideoCommand = imageProcessing.livestreamer + 
@@ -104,8 +110,8 @@ class Screenshot {
     }
 
     static monitor() {
-        // Only continue if we know whats playing, the time remaining is between 95 and 1 second and we haven't already started taking a screenshot
-        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 95 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
+        // Only continue if we know whats playing, the time remaining is between 90 and 1 second and we haven't already started taking a screenshot
+        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 90 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
             let lastScreenshot = config.imageProcessing.screenshotSaved;
 
             // If there hasn't been a screenshot, take one, OR
@@ -116,8 +122,19 @@ class Screenshot {
         
         }
         else if(!config.chatMonitor.nowPlaying || (config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining === 0)) {
-            config.imageProcessing.screenshotStarted = false;
-            config.imageProcessing.screenshotSaved = false;
+            if(config.imageProcessing.screenshotSaved) {
+                config.imageProcessing.screenshotStarted = true;
+                
+                // Wait to erase the vote screenshots
+                setTimeout(() => {
+                    config.imageProcessing.screenshotSaved = false;
+                    config.imageProcessing.screenshotStarted = false;
+                }, EXTRA_TIME);
+                
+            }
+            else {
+                config.imageProcessing.screenshotStarted = false;
+            }
         }
     }
 

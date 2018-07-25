@@ -1,3 +1,5 @@
+const config = require(process.cwd() + "/config");
+
 class NowPlaying {
 
 	constructor() {
@@ -7,8 +9,19 @@ class NowPlaying {
 		this.message			= "";
 	}
 
+	get videoEndTime() {
+		return this.timeRecorded+(this.videoLength*1000)-(this.videoTimeElapsed*1000);
+	}
+
 	get timeRemaining() {
-		let videoEndTime 	= this.timeRecorded+(this.videoLength*1000)-(this.videoTimeElapsed*1000);
+		let videoEndTime 	= this.videoEndTime;
+		let timeNow 		= Date.now();
+
+		return (videoEndTime > timeNow) ? Math.floor((videoEndTime - timeNow)/1000) : 0;
+	}
+
+	get extraTimeRemaining() {
+		let videoEndTime 	= this.videoEndTime + config.voting.additionalVoteTime;
 		let timeNow 		= Date.now();
 
 		return (videoEndTime > timeNow) ? Math.floor((videoEndTime - timeNow)/1000) : 0;
@@ -28,9 +41,10 @@ class NowPlaying {
 
 	getFormattedData() {
 		return {
-			title           : this.title,
-			timeRemaining	: this.timeRemaining,
-			videoLength     : this.videoLength            
+			title           	: this.title,
+			timeRemaining		: this.timeRemaining,
+			videoLength     	: this.videoLength,
+			extraTimeRemaining	: this.extraTimeRemaining
 		}
 	}
 
