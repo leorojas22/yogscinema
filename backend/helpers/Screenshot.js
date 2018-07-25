@@ -110,8 +110,8 @@ class Screenshot {
     }
 
     static monitor() {
-        // Only continue if we know whats playing, the time remaining is between 90 and 1 second and we haven't already started taking a screenshot
-        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= 90 && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
+        // Only continue if we know whats playing, the time remaining is low enough that the votes should have shown up and we haven't already started taking a screenshot
+        if(config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining <= imageProcessing.startTime && config.chatMonitor.nowPlaying.timeRemaining > 0 && !config.imageProcessing.screenshotStarted) {
             let lastScreenshot = config.imageProcessing.screenshotSaved;
 
             // If there hasn't been a screenshot, take one, OR
