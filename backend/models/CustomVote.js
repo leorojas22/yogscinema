@@ -87,6 +87,7 @@ class CustomVote extends BaseModel {
             // Check if we have it stored in the db already
             let search = {};
             search[voteCheck.type] = voteCheck.vote;
+
             return CustomVote.find(search).then(result => {
                 let id = result.vote_command.substr(1);
                 return { 
@@ -147,7 +148,7 @@ class CustomVote extends BaseModel {
             let voteInfo = CustomVote.getVoteInfo(message);
             if(voteInfo) {
                 let defaultOptions = [1,2,3,4];
-                if(defaultOptions.indexOf(parseInt(voteInfo.vote)) !== -1) {
+                if(!isNaN(voteInfo.vote) && voteInfo.vote.length === 1 && defaultOptions.indexOf(parseInt(voteInfo.vote)) !== -1) {
                     return;
                 }
 
