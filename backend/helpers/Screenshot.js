@@ -6,7 +6,7 @@ const jimp = require("jimp");
 
 /**
  * 470px down
- * 
+ *
  * Segment 1: 320x95
  * Segment 2: 320x95
  * Segment 3: 315x95
@@ -24,13 +24,13 @@ const EXTRA_TIME = config.voting.additionalVoteTime;
 class Screenshot {
 
     static capture() {
-        
-        const saveVideoCommand = imageProcessing.livestreamer + 
-                                " --player-continuous-http --player-no-close " + imageProcessing.streamURL + " best" +
+
+        const saveVideoCommand = imageProcessing.livestreamer +
+                                " --player-continuous-http --player-no-close " + imageProcessing.streamURL + " 720p60" +
                                 " --twitch-oauth-token " + imageProcessing.oauthToken + " -O | " + imageProcessing.ffmpeg +
                                 " -y -t 1 -i - -strict -2 " + imageProcessing.savePath + "screenshot.mp4";
 
-        const saveScreenshotCommand = imageProcessing.ffmpeg + " -y -ss 00:00:00 -i " + imageProcessing.savePath + "screenshot.mp4 -vframes 1 -q:v 2 " + 
+        const saveScreenshotCommand = imageProcessing.ffmpeg + " -y -ss 00:00:00 -i " + imageProcessing.savePath + "screenshot.mp4 -vframes 1 -q:v 2 " +
                                     imageProcessing.savePath + "screenshot.jpg";
 
         return exec(saveVideoCommand).then((output, err) => {
@@ -57,7 +57,7 @@ class Screenshot {
     static crop() {
         /**
          * 470px down
-         * 
+         *
          * Segment 1: 320x95
          * Segment 2: 320x95
          * Segment 3: 315x95
@@ -92,7 +92,7 @@ class Screenshot {
         });
 
     }
-    
+
     static screenshotVotes() {
         config.imageProcessing.screenshotStarted = true;
 
@@ -119,18 +119,18 @@ class Screenshot {
             if(!lastScreenshot || (lastScreenshot && (Date.now() - lastScreenshot) >= 5000)) {
                 this.screenshotVotes();
             }
-        
+
         }
         else if(!config.chatMonitor.nowPlaying || (config.chatMonitor.nowPlaying && config.chatMonitor.nowPlaying.timeRemaining === 0)) {
             if(config.imageProcessing.screenshotSaved) {
                 config.imageProcessing.screenshotStarted = true;
-                
+
                 // Wait to erase the vote screenshots
                 setTimeout(() => {
                     config.imageProcessing.screenshotSaved = false;
                     config.imageProcessing.screenshotStarted = false;
                 }, EXTRA_TIME);
-                
+
             }
             else {
                 config.imageProcessing.screenshotStarted = false;
