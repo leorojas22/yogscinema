@@ -25,6 +25,7 @@ class Screenshot {
 
     static capture() {
 
+        // Available stream resolutions:  1080p60, 160p, 360p, 480p, 720p60
         const saveVideoCommand = imageProcessing.livestreamer +
                                 " --player-continuous-http --player-no-close " + imageProcessing.streamURL + " 720p60" +
                                 " --twitch-oauth-token " + imageProcessing.oauthToken + " -O | " + imageProcessing.ffmpeg +
