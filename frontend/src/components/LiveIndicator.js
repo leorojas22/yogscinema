@@ -14,7 +14,7 @@ class LiveIndicator extends React.Component {
 
 
     checkIfLive() {
-        
+
         if(this.checkLiveInterval) {
             clearTimeout(this.checkLiveInterval);
         }
@@ -40,10 +40,10 @@ class LiveIndicator extends React.Component {
             this.props.updateLiveStatus(false);
         });
 
-        // Check if YogsCinema is live again in 2 minutes
+        // Check if YogsCinema is live again in 10 seconds
         this.checkLiveInterval = setTimeout(() => {
             this.checkIfLive();
-        }, 120000)
+        }, 10000)
     }
 
     render() {
