@@ -7,6 +7,8 @@ class Cron {
         Twitch.getChannelInfo("yogscast").then(result => {
             config.yogsChannel = {
                 title: result.title,
+                game_id: result.game_id,
+                is_live: result.type === "live",
                 last_checked: new Date()
             };
         })

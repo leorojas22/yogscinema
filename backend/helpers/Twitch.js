@@ -5,6 +5,10 @@ const request = require("request");
 
 class Twitch {
 
+    static get TWITCH_PLAYS() {
+        return "491180";
+    }
+
     static getUserInfo(token) {
         return new Promise((resolve, reject) => {
             request({
@@ -67,7 +71,7 @@ class Twitch {
                 }
             });
         });
-        
+
     }
 
     static refreshToken(token) {

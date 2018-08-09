@@ -6,7 +6,7 @@ module.exports = (app) => {
     app.get("/twitch-authenticate", (req, res) => {
         res.redirect(Twitch.getAuthenticateURL());
     });
-    
+
     app.get("/connect", (req, res) => {
         if(typeof req.query.code !== 'undefined') {
             return User.connect(req.query.code).then(user => {
@@ -26,14 +26,18 @@ module.exports = (app) => {
     app.get("/is-live", (req,res) => {
         let output = { result: false };
         if(config.yogsChannel) {
-            output.result 		= config.yogsChannel.title.indexOf("YogsCinema") !== -1;
+            let channelTitleHasYogsCinema   = config.yogsChannel.title.indexOf("YogsCinema") !== -1;
+            let channelIsLive               = config.yogsChannel.is_live;
+            let gameIsTwitchPlays           = config.yogsChannel.game_id === Twitch.TWITCH_PLAYS;
+
+            output.result = channelTitleHasYogsCinema && channelIsLive && gameIsTwitchPlays;
             output.last_checked = config.yogsChannel.last_checked;
-            
+
             let nowPlaying = false;
             if(config.chatMonitor.nowPlaying) {
                 nowPlaying = config.chatMonitor.nowPlaying.getFormattedData();
             }
-            
+
             output.nowPlaying = nowPlaying;
             output.voteImages = config.imageProcessing.screenshotSaved;
 
@@ -41,5 +45,5 @@ module.exports = (app) => {
 
         res.json(output);
     });
-    
+
 };
