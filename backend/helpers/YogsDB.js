@@ -1,7 +1,11 @@
 const request = require("request");
+const Cache = require(process.cwd() + "/helpers/Cache");
+const { sha1, base64 } = require(process.cwd() + "/helpers/crypto");
 
-const YOGDB_API_URL = "https://api.yogsdb.com/api/videos";
-const YOGSLIVE_CHANNEL_ID = 32;
+const YOGDB_API_URL        = "https://api.yogsdb.com/api/videos";
+const YOGSLIVE_CHANNEL_ID  = 32;
+const YOGSDB_REDIS_HASH    = "yogsdb";
+const CACHE_EXPIRE_TIME    = 60000;//259200000; // 3 days
 
 class YogsDB {
 
@@ -58,19 +62,18 @@ class YogsDB {
                 url: YOGDB_API_URL + "/"+id,
                 method: "GET"
             }, (err, response, body) => {
-                console.log("ID");
                 if(err) {
                     console.log(err);
                     return reject(err);
                 }
-                
+
                 let result = JSON.parse(body);
                 if(Object.keys(result).length > 0) {
                     return resolve(result);
                 }
 
                 return reject(false);
-                
+
             });
         });
 
@@ -98,38 +101,47 @@ class YogsDB {
 
         whereQuery = "?" + whereQuery.join("&");
 
-        return new Promise((resolve, reject) => {
-            request({
-                url: YOGDB_API_URL + whereQuery,
-                method: "GET"
-            }, (err, response, body) => {
-                console.log("SEARCH");
-                if(err) {
-                    console.log(err);
-                    return reject(err);
-                }
-                
-                let result = JSON.parse(body);
-                if(typeof result.data !== 'undefined' && result.data.length > 0) {
-                    let firstValidResult = false;
-                    for(let x=0; x<result.data.length;x++) {
-                        let video = result.data[x];
-                        if(video.channel.id !== YOGSLIVE_CHANNEL_ID) {
-                            firstValidResult = video;
-                            break;
+        // Check if the query is stored in redis
+
+        return Cache.get(YOGSDB_REDIS_HASH, whereQuery).catch((err) => {
+            // Could not find cached result, perform the search
+
+            return new Promise((resolve, reject) => {
+                request({
+                    url: YOGDB_API_URL + whereQuery,
+                    method: "GET"
+                }, (err, response, body) => {
+
+                    if(err) {
+                        console.log(err);
+                        return reject(err);
+                    }
+
+                    let result = JSON.parse(body);
+                    if(typeof result.data !== 'undefined' && result.data.length > 0) {
+                        let firstValidResult = false;
+                        for(let x=0; x<result.data.length;x++) {
+                            let video = result.data[x];
+                            if(video.channel.id !== YOGSLIVE_CHANNEL_ID) {
+                                firstValidResult = video;
+                                break;
+                            }
+                        }
+
+                        if(firstValidResult) {
+                            // Cache the result
+                            Cache.save(YOGSDB_REDIS_HASH, whereQuery, firstValidResult, CACHE_EXPIRE_TIME);
+                            return resolve(firstValidResult);
                         }
                     }
 
-                    if(firstValidResult) {
-                        return resolve(firstValidResult);
-                    }
-                }
-                console.log(result);
-                console.log(where);
-                return reject(false);
-                
+                    return reject(false);
+
+                });
             });
         });
+
+
     }
 }
 

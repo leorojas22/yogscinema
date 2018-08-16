@@ -163,7 +163,7 @@ class VoteOptions extends React.Component {
                 </h3>
                 <div className="custom-votes">
                     {
-                        this.state.customVotes.length > 0 ? 
+                        this.state.customVotes.length > 0 ?
                         this.state.customVotes.map((customVote, index) => (
                             <CustomVote key={index} disabled={this.state.isVoting ? "disabled" : ""} onClick={this.vote.bind(this, customVote.vote_command)} title={customVote.video_title} image={customVote.video_image} voteCommand={customVote.vote_command} />
                         ))
@@ -173,6 +173,13 @@ class VoteOptions extends React.Component {
                         )
                     }
                 </div>
+                <h3>Your Custom Votes</h3>
+                <form>
+                    <div className="form-group">
+                        <input type="text" className="form-control" placeholder="Search for a video" />
+                        <button type="submit" className="btn">Search</button>
+                    </div>
+                </form>
             </Fragment>
         )
         :
