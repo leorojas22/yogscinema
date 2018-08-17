@@ -176,7 +176,7 @@ class VoteOptions extends React.Component {
                 <h3>Your Custom Votes</h3>
                 <form>
                     <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Search for a video" />
+                        <input type="text" className="form-control" placeholder="Search for a video or enter a YouTube URL" />
                         <button type="submit" className="btn">Search</button>
                     </div>
                 </form>
