@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import CustomVote from './CustomVote';
 import { ajaxHelper } from '../helpers/ajax';
 import config from '../config';
 import VoteQueue from './VoteQueue';

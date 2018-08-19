@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { ajaxHelper } from '../helpers/ajax';
 
 class LiveIndicator extends React.Component {

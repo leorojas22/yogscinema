@@ -79,6 +79,8 @@ io.on("connection", (socket) => {
 
 });
 
+const NowPlaying = require(process.cwd() + "/helpers/NowPlaying");
+NowPlaying.loadFromCache();
 
 http.listen(3001, () => {
     console.log("Listening on port 3001");

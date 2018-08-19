@@ -64,7 +64,10 @@ class VoteQueue extends React.Component {
 
     handleSearchSubmit(e) {
         e.preventDefault();
-        console.log("TESTING");
+
+        if(this.state.searching) {
+            return false;
+        }
 
         this.setState({
             searching: true
@@ -91,9 +94,7 @@ class VoteQueue extends React.Component {
                         searchTerm: ""
                     });
                 }
-                else {
-                    console.log("Empty array");
-                }
+
             }
             else {
                 return Promise.reject(response);
@@ -248,7 +249,18 @@ class VoteQueue extends React.Component {
                 <form onSubmit={this.handleSearchSubmit} style={{ marginTop: "20px"}} >
                     <div className="form-group">
                         <input type="text" className="form-control" name="searchTerm" placeholder="Search for a video" value={this.state.searchTerm} onChange={this.handleFormInput} />
-                        <button type="submit" className="btn">Search</button>
+                        <button type="submit" className="btn" disabled={this.state.searching}>
+                            {
+                                this.state.searching ?
+                                (
+                                    <Fragment>
+                                        <i className="fa fa-spinner fa-spin" /> Searching...
+                                    </Fragment>
+                                )
+                                :
+                                "Search"
+                            }
+                        </button>
                     </div>
                 </form>
             </Fragment>

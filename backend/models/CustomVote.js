@@ -3,6 +3,7 @@ const YogsDB = require(process.cwd() + "/helpers/YogsDB");
 const tmi = require("tmi.js");
 const config = require(process.cwd() + "/config");
 const NowPlaying = require(process.cwd() + "/helpers/NowPlaying");
+const Cache = require(process.cwd() + "/helpers/Cache");
 
 class CustomVote extends BaseModel {
 
@@ -203,6 +204,9 @@ class CustomVote extends BaseModel {
                 // Example Now Playing message: "Now playing: Minecraft - MoonQuest 42 - King of the Squids [00:01:25 / 00:17:37] - Cinema schedule: https://bit.ly/cinemaschedule"
                 let nowPlaying = NowPlaying.createFromChatMessage(message, timeNow);
                 if(nowPlaying) {
+
+                    // Save now playing to cache
+                    Cache.save("yogscinema", "nowPlaying", nowPlaying.getSerialized());
                     config.chatMonitor.nowPlaying = nowPlaying;
                 }
             }
