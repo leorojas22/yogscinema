@@ -23,6 +23,10 @@ class CustomVote extends BaseModel {
         return 2;
     }
 
+    get full_vote_command() {
+        return "!vote " + this.vote_command;
+    }
+
     static async findRecent(where = {}, distinct = false) {
 
         let lookBackTimestamp 	= Date.now() - CustomVote.LOOKBACK_TIME;
@@ -94,7 +98,8 @@ class CustomVote extends BaseModel {
                     id: id,
                     image: result.video_image,
                     title: result.video_title,
-                    vote_command: "!vote " + result.vote_command
+                    full_vote_command: "!vote " + result.vote_command,
+                    youtube_id: result.youtube_id
                 };
             })
             .catch(err => {

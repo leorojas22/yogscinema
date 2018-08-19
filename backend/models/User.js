@@ -18,6 +18,10 @@ class User extends BaseModel {
         return "users";
     }
 
+    static editableFields() {
+        return ['remove_vote_queue_if_wins'];
+    }
+
     async saveToken(token) {
         let encryptedToken = encrypt(token);
         this.token = encryptedToken;
@@ -61,7 +65,7 @@ class User extends BaseModel {
 
         let predefinedValues = [1,2,3,4];
         if(!isNaN(option) && predefinedValues.indexOf(parseInt(option)) !== -1) {
-            return Promise.resolve(true);
+            return Promise.resolve({ full_vote_command: "!vote "+option});
         }
 
         if(typeof option === 'object' && typeof option.id !== 'undefined') {
@@ -135,8 +139,12 @@ class User extends BaseModel {
             console.log("VALID VOTE");
             return this.verifyAccessToken().then(() => {
                 console.log("VALID ACCESS TOKEN");
+                let voteCommand = "!vote " + option;
+                if(typeof vote.full_vote_command !== 'undefined') {
+                    voteCommand = vote.full_vote_command;
+                }
 
-                return this.chat(vote.vote_command).then(() => {
+                return this.chat(voteCommand).then(() => {
                     // Update last message sent
                     return User.query().update({ last_vote_time: new Date(), last_vote: option }).where({ id: this.id });
                 })
@@ -232,7 +240,8 @@ class User extends BaseModel {
             id				: json.id,
             username		: json.username,
             last_vote		: json.last_vote,
-            last_vote_time	: json.last_vote_time
+            last_vote_time	: json.last_vote_time,
+            remove_vote_queue_if_wins: json.remove_vote_queue_if_wins
         }
     }
 

@@ -21,6 +21,7 @@ class VoteOptions extends React.Component {
 
         this.vote = this.vote.bind(this);
         this.updateVoteQueue = this.updateVoteQueue.bind(this);
+        this.filterCustomVotes = this.filterCustomVotes.bind(this);
     }
 
     updateVoteQueue(voteQueue) {
@@ -67,6 +68,35 @@ class VoteOptions extends React.Component {
         return lastVote;
     }
 
+    // Filters custom votes seen in the channel and removes any that were added by the user
+    filterCustomVotes(customVotesResponse) {
+
+        if(this.state.voteQueue.length > 0) {
+            let filteredVotes = [];
+            for(let y = 0; y < customVotesResponse.length; y++) {
+                let foundVote = false;
+                let customVote = customVotesResponse[y];
+                for(let x = 0; x < this.state.voteQueue.length; x++) {
+                    let addedVote = this.state.voteQueue[x];
+                    if(customVote.youtube_id === addedVote.youtube_id) {
+                        foundVote = true;
+                        break;
+                    }
+                }
+
+                if(!foundVote) {
+                    filteredVotes.push(customVote);
+                }
+            }
+
+            return filteredVotes;
+        }
+
+
+        return customVotesResponse;
+    }
+
+
     checkForCustomVotes() {
 
         ajaxHelper("/votes", {
@@ -74,7 +104,7 @@ class VoteOptions extends React.Component {
         }).then(response => {
             if(typeof response.result !== 'undefined' && response.result) {
                 this.setState({
-                    customVotes: response.data
+                    customVotes: this.filterCustomVotes(response.data)
                 });
             }
         })
@@ -206,6 +236,7 @@ class VoteOptions extends React.Component {
                     vote={this.vote}
                     voteQueue={this.state.voteQueue}
                     updateVoteQueue={this.updateVoteQueue}
+                    user={this.props.user}
                 />
             </Fragment>
         )

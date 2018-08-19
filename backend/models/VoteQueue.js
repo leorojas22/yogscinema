@@ -11,10 +11,43 @@ class VoteQueue extends BaseModel {
         return "vote_queue";
     }
 
-    get vote_command() {
+    get full_vote_command() {
         return "!voteadd " + this.youtube_id;
     }
 
+    static getForUser(user) {
+        let filteredVotes = [];
+        return VoteQueue.findMany({ user_id: user.id, deleted: null }, "id DESC").then(votes => {
+            // Check to see if the user wants to remove any votes that have won
+            filteredVotes = votes;
+            if(user.remove_vote_queue_if_wins) {
+
+                let deletePromises = [];
+                let nowPlaying = false;
+                if(config.chatMonitor.nowPlaying) {
+                    filteredVotes = [];
+                    nowPlaying = config.chatMonitor.nowPlaying.getFormattedData();
+                    for(let x = 0; x < votes.length; x++) {
+                        let vote = votes[x];
+                        if(vote.video_title === nowPlaying.title) {
+                            // Delete vote
+                            deletePromises.push(vote.delete());
+                        }
+                        else {
+                            filteredVotes.push(vote);
+                        }
+                    }
+
+                    return Promise.all(deletePromises);
+                }
+            }
+
+            return Promise.resolve(filteredVotes);
+        })
+        .then(() => {
+            return filteredVotes;
+        });
+    }
 
     static async deleteForUser(user) {
         return await this.query().update({ deleted: new Date() }).where({ user_id: user.id, deleted: null });

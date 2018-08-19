@@ -8,10 +8,15 @@ class VoteQueue extends React.Component {
     constructor(props) {
         super(props);
 
+        let removeIfWins = true;
+        if(typeof props.user !== 'undefined' && typeof props.user.remove_vote_queue_if_wins !== 'undefined') {
+            removeIfWins = props.user.remove_vote_queue_if_wins;
+        }
+
         this.state = {
             searchTerm: "",
             searching: false,
-            removeIfWins: true,
+            removeIfWins: removeIfWins,
             deletingVote: false
         }
 
@@ -39,9 +44,11 @@ class VoteQueue extends React.Component {
             // do nothing
         });
 
+
         setTimeout(() => {
             this.loadVoteQueue();
         }, 10000);
+
     }
 
     handleFormInput(e) {
@@ -105,9 +112,30 @@ class VoteQueue extends React.Component {
 
     toggleRemoveIfWins() {
         let removeIfWins = !this.state.removeIfWins;
+
         this.setState({
             removeIfWins
         });
+
+        ajaxHelper("/user", {
+            method: "PATCH",
+            body: {
+                removeVoteQueueIfWins: removeIfWins ? 1 : 0,
+                csrfToken: localStorage.getItem("csrfToken")
+            }
+        })
+        .catch(err => {
+            // Show error
+            let message = typeof err.message !== 'undefined' ? err.message : "An error occurred while saving your settings.  You may need to refresh!";
+
+            this.props.togglePopupMessage('error', message);
+            this.setState({
+                removeIfWins: !removeIfWins
+            });
+        })
+
+
+
     }
 
     removeVoteQueue(voteQueue) {

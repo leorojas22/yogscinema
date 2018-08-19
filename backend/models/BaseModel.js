@@ -5,6 +5,10 @@ class BaseModel extends Model {
         return await this.query().insert(fields);
     }
 
+    static editableFields() {
+        return [];
+    }
+
     get usesSoftDeletes() {
         return true;
     }
@@ -17,6 +21,33 @@ class BaseModel extends Model {
         else {
             // Hard delete
             return await this.constructor.query().where({ id: this.id }).del();
+        }
+    }
+
+    async update(fields = {}) {
+
+        let fieldKeys = Object.keys(fields);
+        let filteredUpdate = {};
+        let editableFields = this.constructor.editableFields();
+        for(let key = 0; key < fieldKeys.length; key++) {
+            let fieldKey = fieldKeys[key];
+            if(editableFields.indexOf(fieldKey) !== -1) {
+                filteredUpdate[fieldKey] = fields[fieldKey];
+            }
+        }
+
+        if(Object.keys(filteredUpdate).length > 0) {
+            return await this.constructor.query().update(filteredUpdate).where({ id: this.id }).then((result) => {
+
+                for(let key in filteredUpdate) {
+                    this[key] = filteredUpdate[key];
+                }
+
+                return this;
+            });
+        }
+        else {
+            return await Promise.reject();
         }
     }
 

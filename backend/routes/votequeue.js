@@ -6,7 +6,7 @@ const VoteQueue  = require(process.cwd() + "/models/VoteQueue");
 router.use(verifyJWT);
 
 router.get("/", (req, res) => {
-    VoteQueue.findMany({ user_id: req.user.id, deleted: null }, "id DESC").then(votes => {
+    VoteQueue.getForUser(req.user).then(votes => {
         res.json({
             result: true,
             data: votes
@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
     })
     .catch(err => {
         res.json({ result: true, data: [] });
-    })
+    });
 });
 
 router.post("/", (req, res) => {
