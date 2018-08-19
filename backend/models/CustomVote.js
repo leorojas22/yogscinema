@@ -93,6 +93,12 @@ class CustomVote extends BaseModel {
             search[voteCheck.type] = voteCheck.vote;
 
             return CustomVote.find(search).then(result => {
+
+                if(typeof result.youtube_id === 'undefined' || (typeof result.youtube_id !== 'undefined' && !result.youtube_id)) {
+                    // For future proofing, if we dont have the youtube_id saved, look up the video again.
+                    return Promise.reject();
+                }
+
                 let id = result.vote_command.substr(1);
                 return {
                     id: id,
