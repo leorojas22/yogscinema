@@ -12,7 +12,7 @@ class CustomVote extends BaseModel {
 
     static get LOOKBACK_TIME() {
         // Look back 2 minutes
-        return 120000; 
+        return 120000;
     }
 
     static get TYPE_VOTE_ADD() {
@@ -30,7 +30,7 @@ class CustomVote extends BaseModel {
 
         let results = null;
         if(distinct) {
-            results = await this.query().distinct('vote_command','video_title','video_image').where(where).where("created", ">=", lookBackTime);
+            results = await this.query().distinct('vote_command','video_title','video_image','youtube_id').where(where).where("created", ">=", lookBackTime);
         }
         else {
             results = await this.query().where(where).where("created", ">=", lookBackTime);
@@ -50,7 +50,7 @@ class CustomVote extends BaseModel {
 
         let beginTextVoteCheck 		= voteText.substr(0,beginVoteCommand.length);
         let beginTextVoteAddCheck 	= voteText.substr(0, beginVoteAddCommand.length);
-        
+
         let voteLookup = false;
         let voteType = false;
         if(beginTextVoteCheck === beginVoteCommand) {
@@ -90,10 +90,11 @@ class CustomVote extends BaseModel {
 
             return CustomVote.find(search).then(result => {
                 let id = result.vote_command.substr(1);
-                return { 
+                return {
                     id: id,
                     image: result.video_image,
-                    title: result.video_title
+                    title: result.video_title,
+                    vote_command: "!vote " + result.vote_command
                 };
             })
             .catch(err => {
@@ -157,12 +158,13 @@ class CustomVote extends BaseModel {
                     let search = {
                         vote_command: 'c'+result.id
                     }
-                    
+
                     CustomVote.findRecent(search).then(recentVote => {}).catch(() => {
                         // Save recent
                         let saveInfo = Object.assign({
-                            video_image: result.image,
-                            video_title: result.title
+                            video_image : result.image,
+                            video_title : result.title,
+                            youtube_id  : result.youtube_id
                         }, search);
                         if(voteInfo.type === "vote_add_command") {
                             saveInfo.vote_add_command = voteInfo.vote;
@@ -175,7 +177,7 @@ class CustomVote extends BaseModel {
                             console.log(customVote);
                         })
                         .catch(err => {
-                            console.log(err);	
+                            console.log(err);
                         });
                     });
 

@@ -18,7 +18,12 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-    VoteQueue.createFromSearch(req.body.searchTerm).then(vote => {
+    VoteQueue.createFromSearch({ searchTerm: req.body.searchTerm, user: req.user }).then(vote => {
+
+        if(Array.isArray(vote)) {
+            vote = vote[0];
+        }
+
         res.json({
             result: true,
             data: vote
@@ -43,5 +48,18 @@ router.delete("/:id", (req, res) => {
         })
     });
 });
+
+router.post("/empty", (req, res) => {
+    VoteQueue.deleteForUser(req.user).then(() => {
+        res.json({ result: true });
+    })
+    .catch(err => {
+        res.json({
+            result: false,
+            message: "Unable to empty your queue at this time.  Please try again later."
+        })
+    });
+});
+
 
 module.exports = router;

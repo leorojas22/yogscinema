@@ -219,6 +219,7 @@ button.vote-3:hover {
     width: 30%;
     padding: 0px 10px;
     padding-bottom: 40px;
+    vertical-align: top;
 }
 
 .custom-vote button {
@@ -343,6 +344,47 @@ hr {
     margin-top: 10px;
 }
 
+.custom-vote .youtube-link {
+    background-color: #ff2000;
+    color: white !important;
+    margin-top: 10px;
+}
+
+.remove-vote {
+    padding-bottom: 5px;
+    text-align: right;
+}
+
+.mb-sm {
+    margin-bottom: 5px;
+}
+
+.vote-queue-options {
+    position: relative;
+    margin: 0px auto;
+    width: 20%;
+    overflow: auto;
+    padding-top: 10px;
+    padding-bottom: 50px;
+    color: #b9bed6;
+}
+
+.vote-queue-options a {
+    color: #b9bed6 !important;
+    cursor: pointer;
+}
+
+.checkbox {
+    cursor: pointer;
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
 
 @media (max-width: 1600px) {
 
@@ -355,17 +397,26 @@ hr {
     .twitch-embed {
         height: 598px;
     }
+
 }
 
 @media (max-width: 1366px) {
     .twitch-embed {
         height: 559px;
     }
+
+    .vote-queue-options {
+        width: 23%;
+    }
 }
 
 @media (max-width: 1280px) {
     .twitch-embed {
         height: 513px;
+    }
+
+    .vote-queue-options {
+        width: 28%;
     }
 }
 
@@ -417,6 +468,15 @@ hr {
 
     .custom-vote {
         width: 100%;
+    }
+
+    .custom-vote button {
+        margin-bottom: 5px;
+    }
+
+    .custom-vote .youtube-link {
+        display: block;
+        margin: 0px;
     }
 
     .popup-message {
@@ -471,6 +531,10 @@ hr {
         margin: 0px;
         padding: 10px 18px;
         margin-top: 10px;
+    }
+
+    .vote-queue-options {
+        width: 80%;
     }
 
 }

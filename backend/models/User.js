@@ -7,6 +7,7 @@ const config 				= require(process.cwd() + "/config");
 const moment				= require("moment");
 const CustomVote			= require(process.cwd() + "/models/CustomVote");
 const md5					= require("md5");
+const VoteQueue             = require(process.cwd() + "/models/VoteQueue");
 
 const TWITCH_CHANNEL 		= config.voting.channel;
 const WAIT_BETWEEN_VOTES 	= config.voting.waitTime;
@@ -59,13 +60,18 @@ class User extends BaseModel {
         }
 
         let predefinedValues = [1,2,3,4];
-        if(predefinedValues.indexOf(parseInt(option)) !== -1) {
+        if(!isNaN(option) && predefinedValues.indexOf(parseInt(option)) !== -1) {
             return Promise.resolve(true);
         }
 
-        // Custom option
-        // Check to make sure its valid
-        return CustomVote.verify("!vote "+option);
+        if(typeof option === 'object' && typeof option.id !== 'undefined') {
+            return VoteQueue.find({ user_id: this.id, id: option.id });
+        }
+        else {
+            // Custom option
+            // Check to make sure its valid
+            return CustomVote.verify("!vote "+option);
+        }
     }
 
     getTwitchClient() {
@@ -79,7 +85,7 @@ class User extends BaseModel {
                     TWITCH_CHANNEL
                 ]
             }
-    
+
             this.twitchClient = new tmi.client(opts);
         }
 
@@ -105,7 +111,7 @@ class User extends BaseModel {
     }
 
     sayCinemaCommand() {
-        
+
         let lastMessage = moment(this.last_cinema_time);
         let now 		= moment();
         let diff 		= now.diff(lastMessage, 'seconds');
@@ -125,12 +131,12 @@ class User extends BaseModel {
 
     vote(option) {
 
-        return this.validateVote(option).then(() => {
+        return this.validateVote(option).then((vote) => {
             console.log("VALID VOTE");
             return this.verifyAccessToken().then(() => {
                 console.log("VALID ACCESS TOKEN");
 
-                return this.chat("!vote "+option).then(() => {
+                return this.chat(vote.vote_command).then(() => {
                     // Update last message sent
                     return User.query().update({ last_vote_time: new Date(), last_vote: option }).where({ id: this.id });
                 })
@@ -139,7 +145,7 @@ class User extends BaseModel {
                 });
             })
         });
-        
+
     }
 
     getJWT(csrfToken = false) {
@@ -197,7 +203,7 @@ class User extends BaseModel {
     revokeAccess(res) {
         return Twitch.revokeAccess(this.accessToken).then(() => {
             res.clearCookie("jwt");
-            return User.query().update({ token: "" }).where({ id: this.id });	
+            return User.query().update({ token: "" }).where({ id: this.id });
         });
     }
 

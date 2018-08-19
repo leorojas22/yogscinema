@@ -5,7 +5,7 @@ const { sha1, base64 } = require(process.cwd() + "/helpers/crypto");
 const YOGDB_API_URL        = "https://api.yogsdb.com/api/videos";
 const YOGSLIVE_CHANNEL_ID  = 32;
 const YOGSDB_REDIS_HASH    = "yogsdb";
-const CACHE_EXPIRE_TIME    = 60000;//259200000; // 3 days
+const CACHE_EXPIRE_TIME    = 259200000; // 3 days
 
 class YogsDB {
 
@@ -57,23 +57,26 @@ class YogsDB {
             return Promise.reject(false);
         }
 
-        return new Promise((resolve, reject) => {
-            request({
-                url: YOGDB_API_URL + "/"+id,
-                method: "GET"
-            }, (err, response, body) => {
-                if(err) {
-                    console.log(err);
-                    return reject(err);
-                }
+        return Cache.get(YOGSDB_REDIS_HASH, id).catch((err) => {
+            return new Promise((resolve, reject) => {
+                request({
+                    url: YOGDB_API_URL + "/"+id,
+                    method: "GET"
+                }, (err, response, body) => {
+                    if(err) {
+                        console.log(err);
+                        return reject(err);
+                    }
 
-                let result = JSON.parse(body);
-                if(Object.keys(result).length > 0) {
-                    return resolve(result);
-                }
+                    let result = JSON.parse(body);
+                    if(Object.keys(result).length > 0) {
+                        Cache.save(YOGSDB_REDIS_HASH, id, result, CACHE_EXPIRE_TIME);
+                        return resolve(result);
+                    }
 
-                return reject(false);
+                    return reject(false);
 
+                });
             });
         });
 

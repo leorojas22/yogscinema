@@ -30,12 +30,12 @@ Model.knex(knex);
 require("./routes.js")(app);
 app.use("/user", require("./routes/user"));
 app.use("/votes", require("./routes/customvotes"));
-
+app.use("/user/vote-queue", require("./routes/votequeue"));
 
 const CustomVote = require("./models/CustomVote");
 CustomVote.monitorChatForVotes();
 if(!config.isDev) {
-    
+
 }
 
 app.use(express.static("public"));

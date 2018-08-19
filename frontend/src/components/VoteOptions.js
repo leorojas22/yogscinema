@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import CustomVote from './CustomVote';
 import { ajaxHelper } from '../helpers/ajax';
 import config from '../config';
+import VoteQueue from './VoteQueue';
+import CustomVoteList from './CustomVoteList';
 
 const API_URL = config.apiURL;
 
@@ -13,15 +15,45 @@ class VoteOptions extends React.Component {
         this.state = {
             isVoting: false,
             customVotes: [],
-            lastVote: false
+            lastVote: false,
+            voteQueue: []
         }
+
+        this.vote = this.vote.bind(this);
+        this.updateVoteQueue = this.updateVoteQueue.bind(this);
+    }
+
+    updateVoteQueue(voteQueue) {
+        this.setState({
+            voteQueue
+        });
     }
 
     parseVote(option) {
         let lastVote = option;
         if(isNaN(option)) {
             // Search through customVotes to get title
-            if(this.state.customVotes.length > 0) {
+
+            if(typeof option === 'object' && typeof option.id !== 'undefined') {
+
+                let foundVote = false;
+                if(this.state.voteQueue.length > 0) {
+                    for(let x=0;x<this.state.voteQueue.length; x++) {
+                        let voteQueue = this.state.voteQueue[x];
+                        if(voteQueue.id === option.id) {
+                            lastVote = voteQueue.video_title;
+                            foundVote = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!foundVote) {
+                    lastVote = false;
+                }
+
+            }
+            else if(this.state.customVotes.length > 0) {
                 for(let x=0;x<this.state.customVotes.length; x++) {
                     let customVote = this.state.customVotes[x];
                     if(customVote.vote_command === option) {
@@ -161,25 +193,20 @@ class VoteOptions extends React.Component {
                     Custom Votes
                     <small>Seen in the last 2 minutes</small>
                 </h3>
-                <div className="custom-votes">
-                    {
-                        this.state.customVotes.length > 0 ?
-                        this.state.customVotes.map((customVote, index) => (
-                            <CustomVote key={index} disabled={this.state.isVoting ? "disabled" : ""} onClick={this.vote.bind(this, customVote.vote_command)} title={customVote.video_title} image={customVote.video_image} voteCommand={customVote.vote_command} />
-                        ))
-                        :
-                        (
-                            <div className="alert alert-dark">No custom votes found.</div>
-                        )
-                    }
-                </div>
-                <h3>Your Custom Votes</h3>
-                <form>
-                    <div className="form-group">
-                        <input type="text" className="form-control" placeholder="Search for a video or enter a YouTube URL" />
-                        <button type="submit" className="btn">Search</button>
-                    </div>
-                </form>
+                <CustomVoteList
+                    customVotes={this.state.customVotes}
+                    isVoting={this.state.isVoting}
+                    vote={this.vote}
+                    noVotesMessage="No custom votes found."
+                />
+                <hr />
+                <VoteQueue
+                    togglePopupMessage={this.props.togglePopupMessage}
+                    isVoting={this.state.isVoting}
+                    vote={this.vote}
+                    voteQueue={this.state.voteQueue}
+                    updateVoteQueue={this.updateVoteQueue}
+                />
             </Fragment>
         )
         :
