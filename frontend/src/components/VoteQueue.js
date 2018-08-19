@@ -247,7 +247,7 @@ class VoteQueue extends React.Component {
                 />
                 <form onSubmit={this.handleSearchSubmit} style={{ marginTop: "20px"}} >
                     <div className="form-group">
-                        <input type="search" className="form-control" name="searchTerm" placeholder="Search for a video" value={this.state.searchTerm} onChange={this.handleFormInput} />
+                        <input type="text" className="form-control" name="searchTerm" placeholder="Search for a video" value={this.state.searchTerm} onChange={this.handleFormInput} />
                         <button type="submit" className="btn">Search</button>
                     </div>
                 </form>
