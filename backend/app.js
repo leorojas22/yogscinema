@@ -82,6 +82,11 @@ io.on("connection", (socket) => {
 const NowPlaying = require(process.cwd() + "/helpers/NowPlaying");
 NowPlaying.loadFromCache();
 
+const YoutubeApi = require(process.cwd() + "/helpers/YoutubeApi");
+let yt = new YoutubeApi();
+
+yt.getPlaylists("UCH-_hzb2ILSCo9ftVSnrCIQ");
+
 http.listen(3001, () => {
     console.log("Listening on port 3001");
     Cron.checkYogsChannel();

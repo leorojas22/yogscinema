@@ -31,11 +31,9 @@ class Cache {
                     try {
                         // Parse result
                         let decodedValue = JSON.parse(base64.decode(result));
-                        console.log(decodedValue);
                         // Check if its not expired
                         if(decodedValue.expireDate > Date.now())
                         {
-                            console.log("GOT CACHED VALUE");
                             resolve(decodedValue.value);
                             return true;
                         }
