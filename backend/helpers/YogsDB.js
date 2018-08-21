@@ -143,8 +143,10 @@ class YogsDB {
                 });
             });
         });
+    }
 
-
+    static getChannels() {
+        // @TODO - Use yogs db to get all yogs channels except for yogslive
     }
 }
 
