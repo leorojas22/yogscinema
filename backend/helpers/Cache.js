@@ -45,6 +45,7 @@ class Cache {
 
                 // If it makes it here, then no cached value was found
                 console.log("CACHE NOT FOUND");
+                console.log(hashKey, field);
                 reject();
                 return false;
             });

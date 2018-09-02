@@ -31,6 +31,7 @@ require("./routes.js")(app);
 app.use("/user", require("./routes/user"));
 app.use("/votes", require("./routes/customvotes"));
 app.use("/user/vote-queue", require("./routes/votequeue"));
+app.use("/channels", require("./routes/channels"));
 
 const CustomVote = require("./models/CustomVote");
 CustomVote.monitorChatForVotes();
@@ -80,16 +81,29 @@ io.on("connection", (socket) => {
 });
 
 const NowPlaying = require(process.cwd() + "/helpers/NowPlaying");
-NowPlaying.loadFromCache();
+//NowPlaying.loadFromCache();
 
 const YoutubeApi = require(process.cwd() + "/helpers/YoutubeApi");
-let yt = new YoutubeApi();
-
-yt.getPlaylists("UCH-_hzb2ILSCo9ftVSnrCIQ");
 
 http.listen(3001, () => {
     console.log("Listening on port 3001");
     Cron.checkYogsChannel();
+
+    /*
+    const YogsDB = require(process.cwd() + "/helpers/YogsDB");
+    YogsDB.getCachedChannels().then(channels => {
+        console.log(channels.length);
+        console.log(channels);
+    })
+    .catch(err => {
+        console.log("ERROR1");
+        console.log(err);
+    });
+    */
+    //let yt = new YoutubeApi();
+    //yt.getPlaylistVideos("PL310728C6AAFF44B1");
+
+
 });
 
 

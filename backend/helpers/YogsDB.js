@@ -2,11 +2,11 @@ const request = require("request");
 const Cache = require(process.cwd() + "/helpers/Cache");
 const { sha1, base64 } = require(process.cwd() + "/helpers/crypto");
 
-const YOGDB_API_URL        = "https://api.yogsdb.com/api/videos";
+const YOGDB_API_URL        = "https://api.yogsdb.com/api";
 const YOGSLIVE_CHANNEL_ID  = 32;
 const YOGSDB_REDIS_HASH    = "yogsdb";
-const CACHE_EXPIRE_TIME    = 259200000; // 3 days
-
+const CACHE_EXPIRE_TIME    = 1200000;//259200000; // 3 days
+const YOGSDB_CHANNEL_KEY   = "channelCache";
 class YogsDB {
 
     static get ID_SEARCH() {
@@ -60,7 +60,7 @@ class YogsDB {
         return Cache.get(YOGSDB_REDIS_HASH, id).catch((err) => {
             return new Promise((resolve, reject) => {
                 request({
-                    url: YOGDB_API_URL + "/"+id,
+                    url: YOGDB_API_URL + "/videos/"+id,
                     method: "GET"
                 }, (err, response, body) => {
                     if(err) {
@@ -111,7 +111,7 @@ class YogsDB {
 
             return new Promise((resolve, reject) => {
                 request({
-                    url: YOGDB_API_URL + whereQuery,
+                    url: YOGDB_API_URL + "/videos" + whereQuery,
                     method: "GET"
                 }, (err, response, body) => {
 
@@ -145,8 +145,69 @@ class YogsDB {
         });
     }
 
-    static getChannels() {
-        // @TODO - Use yogs db to get all yogs channels except for yogslive
+    static getCachedChannels() {
+        return Cache.get(YOGSDB_REDIS_HASH, YOGSDB_CHANNEL_KEY).catch((err) => {
+            console.log("CHANNELS NOT CACHED");
+            return YogsDB.getChannels().then(channels => {
+                Cache.save(YOGSDB_REDIS_HASH, YOGSDB_CHANNEL_KEY, channels, CACHE_EXPIRE_TIME);
+                console.log("SAVED TO CACHE");
+                console.log(channels);
+                return Promise.resolve(channels);
+            })
+            .catch(err => {
+                console.log("ERROR");
+                console.log(err);
+                return Promise.resolve([]);
+            })
+        });
+    }
+
+    static getChannels(apiURL = false, channels = []) {
+        // Use yogs db to get all yogs channels except for yogslive
+
+        return new Promise((resolve, reject) => {
+            let yogsDBUrl = apiURL ? apiURL : YOGDB_API_URL + "/channels"
+            request({
+                url: yogsDBUrl,
+                method: "GET"
+            }, (err, response, body) => {
+
+                if(err) {
+                    console.log(err);
+                    return reject(err);
+                }
+
+                let result = JSON.parse(body);
+                if(typeof result.data !== 'undefined' && result.data.length > 0) {
+                    for(let x = 0; x < result.data.length; x++) {
+                        let channel = result.data[x];
+                        if(parseInt(channel.id) !== YOGSLIVE_CHANNEL_ID) {
+                            channels.push({
+                                youtube_id  : channel.youtube_id,
+                                title       : channel.title,
+                                image       : channel.image
+                            });
+                        }
+                    }
+
+                    if(typeof result.next_page_url !== 'undefined') {
+                        if(result.next_page_url) {
+                            console.log(result.next_page_url);
+                            resolve(YogsDB.getChannels(result.next_page_url, channels));
+                        }
+                        else {
+                            //console.log("ALLCHANNELS:");
+                            //console.log(channels);
+                            resolve(channels);
+                        }
+                    }
+                }
+
+                reject();
+
+            });
+        });
+
     }
 }
 
