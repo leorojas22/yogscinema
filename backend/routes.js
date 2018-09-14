@@ -26,11 +26,12 @@ module.exports = (app) => {
     app.get("/is-live", (req,res) => {
         let output = { result: false };
         if(config.yogsChannel) {
-            let channelTitleHasYogsCinema   = config.yogsChannel.title.indexOf("YogsCinema") !== -1;
+			let channelTitle = config.yogsChannel.title.toLowerCase();
+            let channelTitleHasYogsCinema   = channelTitle.indexOf("yogscinema") !== -1;
             let channelIsLive               = config.yogsChannel.is_live;
             let gameIsTwitchPlays           = config.yogsChannel.game_id === Twitch.TWITCH_PLAYS;
 
-            output.result = channelTitleHasYogsCinema && channelIsLive && gameIsTwitchPlays;
+            output.result = (channelTitleHasYogsCinema || gameIsTwitchPlays) && channelIsLive;
             output.last_checked = config.yogsChannel.last_checked;
 
             let nowPlaying = false;
