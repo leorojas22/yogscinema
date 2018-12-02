@@ -51,7 +51,7 @@ class App extends Component {
         });
     }
 
-    
+
     // Starts a timer to decrease the timeRemaining and extraTimeRemaining by 1 every second until they reach 0
     startTimeRemainingCounter() {
 
@@ -65,13 +65,13 @@ class App extends Component {
                     timeRemaining: this.state.timeRemaining-1
                 });
             }
-            
+
             if(this.state.extraTimeRemaining > 0) {
                 this.setState({
                     extraTimeRemaining: this.state.extraTimeRemaining-1
                 });
             }
-            
+
             if(this.state.extraTimeRemaining === 0 && this.state.timeRemaining === 0) {
                 window.clearInterval(this.timeRemainingInterval);
                 this.timeRemainingInterval = null;
@@ -104,22 +104,22 @@ class App extends Component {
                 switch(window.location.search) {
                     case '?error=1':
                         popupMessage = {
-                            type: 'error', 
+                            type: 'error',
                             message: 'Unable to connect with Twitch.'
                         }
                         break;
                     case '?error=2':
                         popupMessage = {
-                            type: 'error', 
+                            type: 'error',
                             message: 'Unable to revoke access.  Please login to Twitch under the Settings > Connections tab to fully revoke access.'
                         }
                         break;
                     case '?revoked=1':
                         popupMessage = {
-                            type: 'success', 
+                            type: 'success',
                             message: "Successfully logged out."
                         }
-                        break;	
+                        break;
                     default:
                         break;
                 }
@@ -131,7 +131,7 @@ class App extends Component {
                 }
 
             }, 100);
-            
+
         }
     }
 
@@ -141,7 +141,7 @@ class App extends Component {
 
         // When coming to the page and there's a query string, check to see if it's something we expect
         this.parseQueryString();
-        
+
         // Check to see if there are vote images to show
         socket.on("showImages", (imageID) => {
             this.setState({
@@ -175,7 +175,7 @@ class App extends Component {
                 }, 250);
 
             }, 5000);
-            
+
         }
     }
 
@@ -186,7 +186,7 @@ class App extends Component {
                 updatedState.show = true;
                 this.setState({ popupMessage: updatedState });
             }, 150)
-            
+
         }
     }
 
@@ -194,7 +194,7 @@ class App extends Component {
 
         this.setState({
             popupMessage: {
-                type, 
+                type,
                 message,
                 show: false
             }
@@ -210,12 +210,12 @@ class App extends Component {
             <div className="App">
                 <PageTitle />
 
-                <LiveIndicator 
-                    setNowPlayingState          = {this.setNowPlayingState} 
-                    connected                   = {this.state.connected} 
-                    updateLiveStatus            = {this.updateLiveStatus} 
-                    isLive                      = {this.state.isLive} 
-                    togglePopupMessage          = {this.togglePopupMessage} 
+                <LiveIndicator
+                    setNowPlayingState          = {this.setNowPlayingState}
+                    connected                   = {this.state.connected}
+                    updateLiveStatus            = {this.updateLiveStatus}
+                    isLive                      = {this.state.isLive}
+                    togglePopupMessage          = {this.togglePopupMessage}
                     currentVideoTitle           = {this.state.currentVideoTitle}
                     timeRemaining               = {this.state.timeRemaining}
                     videoLength                 = {this.state.videoLength}
@@ -223,9 +223,9 @@ class App extends Component {
                     startTimeRemainingCounter   = {this.startTimeRemainingCounter}
                 />
                 <NowPlaying
-                    connected                   = {this.state.connected} 
-                    isLive                      = {this.state.isLive} 
-                    togglePopupMessage          = {this.togglePopupMessage} 
+                    connected                   = {this.state.connected}
+                    isLive                      = {this.state.isLive}
+                    togglePopupMessage          = {this.togglePopupMessage}
                     currentVideoTitle           = {this.state.currentVideoTitle}
                     timeRemaining               = {this.state.timeRemaining}
                     videoLength                 = {this.state.videoLength}
@@ -237,11 +237,12 @@ class App extends Component {
                     this.state.connected ? (
                         <Fragment>
                             <ConnectedUser user={this.state.connected} />
-                            <VoteOptions 
-                                extraTimeRemaining  = {this.state.extraTimeRemaining} 
-                                voteImages          = {this.state.voteImages} 
-                                isLive              = {this.state.isLive} 
-                                togglePopupMessage  = {this.togglePopupMessage} 
+                            <VoteOptions
+                                extraTimeRemaining  = {this.state.extraTimeRemaining}
+                                voteImages          = {this.state.voteImages}
+                                isLive              = {this.state.isLive}
+                                togglePopupMessage  = {this.togglePopupMessage}
+                                user                = {this.state.connected}
                             />
                         </Fragment>
                     )
@@ -252,7 +253,7 @@ class App extends Component {
                 <TwitchChat />
 
                 <Disclaimer />
-                
+
                 <PopupMessage popupMessage={this.state.popupMessage} />
 
             </div>

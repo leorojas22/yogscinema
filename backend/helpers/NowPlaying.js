@@ -1,4 +1,5 @@
 const config = require(process.cwd() + "/config");
+const Cache = require(process.cwd() + "/helpers/Cache");
 
 class NowPlaying {
 
@@ -39,6 +40,15 @@ class NowPlaying {
 		return title;
 	}
 
+	getSerialized() {
+		return {
+			timeRecorded     : this.timeRecorded,
+			videoLength      : this.videoLength,
+			videoTimeElapsed : this.videoTimeElapsed,
+			message          : this.message
+		}
+	}
+
 	getFormattedData() {
 		return {
 			title           	: this.title,
@@ -48,13 +58,27 @@ class NowPlaying {
 		}
 	}
 
+	static loadFromCache() {
+		// Load now playing from the cache
+
+		Cache.get("yogscinema", "nowPlaying").then((result) => {
+			let np = new this;
+			np.videoTimeElapsed 			= result.videoTimeElapsed;
+			np.videoLength 					= result.videoLength;
+			np.timeRecorded 				= result.timeRecorded;
+			np.message 						= result.message;
+			config.chatMonitor.nowPlaying 	= np;
+		})
+		.catch(err => {});
+	}
+
 	static getRawVideoTimeFromMessage(message) {
 		let videoTimePattern = /\[\d\d\:\d\d\:\d\d \/ \d\d\:\d\d\:\d\d\]/;
 		let rawVideoTime = message.match(videoTimePattern);
 
 		return rawVideoTime;
 	}
-	
+
 	static createFromChatMessage(message, chatTime) {
 
 		let lowerCaseMessage = message.toLowerCase();
@@ -91,8 +115,8 @@ class NowPlaying {
 			}
 		}
 
-		return false;	
-	
+		return false;
+
 	}
 
 }

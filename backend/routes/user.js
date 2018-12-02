@@ -9,6 +9,19 @@ router.get("/", (req, res) => {
     return res.json({ result: true, user: req.user });
 });
 
+router.patch("/", (req, res) => {
+    return req.user.update({ remove_vote_queue_if_wins: req.body.removeVoteQueueIfWins }).then((user) => {
+        return res.json({ result: true, user: req.user });
+    })
+    .catch((err) => {
+        console.log(err);
+        res.json({
+            result: false,
+            message: "Unable to update user.  Please try again later."
+        })
+    })
+});
+
 router.post("/vote", (req, res) => {
     return req.user.vote(req.body.voteOption).then(() => {
         res.json({ result: true });

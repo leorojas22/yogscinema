@@ -3,6 +3,7 @@ const YogsDB = require(process.cwd() + "/helpers/YogsDB");
 const tmi = require("tmi.js");
 const config = require(process.cwd() + "/config");
 const NowPlaying = require(process.cwd() + "/helpers/NowPlaying");
+const Cache = require(process.cwd() + "/helpers/Cache");
 
 class CustomVote extends BaseModel {
 
@@ -12,7 +13,7 @@ class CustomVote extends BaseModel {
 
     static get LOOKBACK_TIME() {
         // Look back 2 minutes
-        return 120000; 
+        return 120000;
     }
 
     static get TYPE_VOTE_ADD() {
@@ -23,6 +24,10 @@ class CustomVote extends BaseModel {
         return 2;
     }
 
+    get full_vote_command() {
+        return "!vote " + this.vote_command;
+    }
+
     static async findRecent(where = {}, distinct = false) {
 
         let lookBackTimestamp 	= Date.now() - CustomVote.LOOKBACK_TIME;
@@ -30,7 +35,7 @@ class CustomVote extends BaseModel {
 
         let results = null;
         if(distinct) {
-            results = await this.query().distinct('vote_command','video_title','video_image').where(where).where("created", ">=", lookBackTime);
+            results = await this.query().distinct('vote_command','video_title','video_image','youtube_id').where(where).where("created", ">=", lookBackTime);
         }
         else {
             results = await this.query().where(where).where("created", ">=", lookBackTime);
@@ -50,7 +55,7 @@ class CustomVote extends BaseModel {
 
         let beginTextVoteCheck 		= voteText.substr(0,beginVoteCommand.length);
         let beginTextVoteAddCheck 	= voteText.substr(0, beginVoteAddCommand.length);
-        
+
         let voteLookup = false;
         let voteType = false;
         if(beginTextVoteCheck === beginVoteCommand) {
@@ -89,11 +94,19 @@ class CustomVote extends BaseModel {
             search[voteCheck.type] = voteCheck.vote;
 
             return CustomVote.find(search).then(result => {
+
+                if(typeof result.youtube_id === 'undefined' || (typeof result.youtube_id !== 'undefined' && !result.youtube_id)) {
+                    // For future proofing, if we dont have the youtube_id saved, look up the video again.
+                    return Promise.reject();
+                }
+
                 let id = result.vote_command.substr(1);
-                return { 
+                return {
                     id: id,
                     image: result.video_image,
-                    title: result.video_title
+                    title: result.video_title,
+                    full_vote_command: "!vote " + result.vote_command,
+                    youtube_id: result.youtube_id
                 };
             })
             .catch(err => {
@@ -157,12 +170,13 @@ class CustomVote extends BaseModel {
                     let search = {
                         vote_command: 'c'+result.id
                     }
-                    
+
                     CustomVote.findRecent(search).then(recentVote => {}).catch(() => {
                         // Save recent
                         let saveInfo = Object.assign({
-                            video_image: result.image,
-                            video_title: result.title
+                            video_image : result.image,
+                            video_title : result.title,
+                            youtube_id  : result.youtube_id
                         }, search);
                         if(voteInfo.type === "vote_add_command") {
                             saveInfo.vote_add_command = voteInfo.vote;
@@ -175,7 +189,7 @@ class CustomVote extends BaseModel {
                             console.log(customVote);
                         })
                         .catch(err => {
-                            console.log(err);	
+                            console.log(err);
                         });
                     });
 
@@ -190,6 +204,9 @@ class CustomVote extends BaseModel {
                 // Example Now Playing message: "Now playing: Minecraft - MoonQuest 42 - King of the Squids [00:01:25 / 00:17:37] - Cinema schedule: https://bit.ly/cinemaschedule"
                 let nowPlaying = NowPlaying.createFromChatMessage(message, timeNow);
                 if(nowPlaying) {
+
+                    // Save now playing to cache
+                    Cache.save("yogscinema", "nowPlaying", nowPlaying.getSerialized());
                     config.chatMonitor.nowPlaying = nowPlaying;
                 }
             }
