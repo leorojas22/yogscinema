@@ -16,12 +16,43 @@ const jimp = require("jimp");
 const imageProcessing = config.imageProcessing;
 
 // The amount of pixels down on the screenshot to start cropping the votes
+// During Jingle Jam: 433
+// Normal: 470
 const CROP_Y = 470;
+const CROP_Y_JINGLE_JAM = 433;
 
 // The extra time at the end of videos to vote even though the video is over
 const EXTRA_TIME = config.voting.additionalVoteTime;
 
 class Screenshot {
+
+	static getCropY() {
+		let date = new Date();
+		if(date.getMonth() === 11) {
+			return CROP_Y_JINGLE_JAM;
+		}
+
+		return CROP_Y;
+	}
+	
+	static getImageSizes() {
+		let date = new Date();
+		if(date.getMonth() === 11) {
+			return [
+				{ w: 295, h: 86 },
+				{ w: 289, h: 86 },
+				{ w: 289, h: 86 },
+				{ w: 295, h: 86 }
+			];
+		}
+		
+		return  [
+			{ w: 320, h: 95 },
+			{ w: 320, h: 95 },
+			{ w: 315, h: 95 },
+			{ w: 325, h: 95 }
+		];
+	}
 
     static capture() {
 
@@ -67,18 +98,13 @@ class Screenshot {
 
         return jimp.read(imageProcessing.savePath + "screenshot.jpg").then(image => {
             let promises = [];
-            const imageSizes = [
-                { w: 320, h: 95 },
-                { w: 320, h: 95 },
-                { w: 315, h: 95 },
-                { w: 325, h: 95 }
-            ]
+            const imageSizes = Screenshot.getImageSizes();
 
             let x = 0;
             for(let i = 0; i < imageSizes.length; i++) {
                 let imageSize = imageSizes[i];
                 let cropImage = image.clone();
-                promises.push(cropImage.crop(x, CROP_Y, imageSize.w, imageSize.h).write(imageProcessing.publicSavePath + "crop" + i + "." + cropImage.getExtension()));
+                promises.push(cropImage.crop(x, Screenshot.getCropY(), imageSize.w, imageSize.h).write(imageProcessing.publicSavePath + "crop" + i + "." + cropImage.getExtension()));
                 x += imageSize.w;
             }
 
