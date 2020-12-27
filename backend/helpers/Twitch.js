@@ -113,7 +113,8 @@ class Twitch {
             request({
                 url: TWITCH_API_URL + "streams?user_login="+channel,
                 headers: {
-                    'Client-ID': config.twitch.clientID
+                    'Client-ID': config.twitch.clientID,
+					'Authorization': 'Bearer ' + config.twitch.oauthToken
                 }
             }, (err, response, body) => {
                 if(err) {
