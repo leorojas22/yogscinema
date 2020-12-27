@@ -14,6 +14,7 @@ class Twitch {
             request({
                 url: TWITCH_API_URL + "users",
                 headers: {
+					'Client-ID': config.twitch.clientID,
                     Authorization: 'Bearer '+token
                 }
             }, (err, response, body) => {
