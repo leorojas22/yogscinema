@@ -59,6 +59,7 @@ class Twitch {
             }, (err, data, body) => {
                 if(err) {
                     console.log(err);
+					console.log(token);
                     return reject({ message: "Unable to connect with Twitch." });
                 }
 
